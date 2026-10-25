@@ -85,7 +85,7 @@ function Hero({ reduced, onOrderPack }: { reduced: boolean; onOrderPack: string 
         <h1>Un tap.<br /><span>Plus de business.</span></h1>
         <p className="hero-sub"><b>Boostov Connect</b> présente votre commerce. <b>Boostov Grow</b> invite vos clients à laisser un avis, partager et revenir.</p>
       </div>
-      <div className="stage-label" aria-live="polite"><span className={`chip ${screen}`}>{screen === "connect" ? "Connect" : "Grow"}</span>{screen === "connect" ? "Votre profil s’ouvre" : "Avis, partage, récompense"}<button type="button" onClick={tap} className="stage-tap">Tapez la carte <NfcWaves className="w14" /></button></div>
+      <div className="stage-label" aria-live="polite"><span className={`chip chip-${screen}`}>{screen === "connect" ? "Connect" : "Grow"}</span>{screen === "connect" ? "Votre profil s’ouvre" : "Avis, partage, récompense"}<button type="button" onClick={tap} className="stage-tap">Tapez la carte <NfcWaves className="w14" /></button></div>
       <div className="hero-actions">
         <div className="hero-ctas">
           <a className="btn btn-white" href={onOrderPack} target="_blank" rel="noreferrer" data-wa="pack"><MessageCircle size={19} />Commander le Pack · {PRICES.pack} DH</a>
