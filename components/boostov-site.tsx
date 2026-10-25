@@ -1,13 +1,12 @@
 "use client";
+/* eslint-disable @next/next/no-img-element -- images are pre-sized WebP in /public/img; plain <img> avoids the runtime optimizer on this Nitro/Vercel build. */
 
-import Image from "next/image";
-import { FormEvent, useState } from "react";
-import { ArrowRight, BarChart3, Camera as Instagram, Check, ChevronRight, CircleDot, ContactRound, Link2, MapPin, Menu, MessageCircle, Moon, MousePointerClick, Navigation, QrCode, Radio, Save, Share2, ShieldCheck, Smartphone, Sparkles, Sun, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { ArrowRight, BarChart3, Check, Gift, Heart, Link2, MapPin, Menu, MessageCircle, Moon, Phone, QrCode, Radio, Save, Share2, ShieldCheck, Smartphone, Star, Sun, Truck, X } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-
-type Offer = "Boostov Connect" | "Boostov Grow";
-type Success = { offer: Offer; quantity: number; phone: string };
+import { OrderModal, type Offer } from "@/components/boostov/order-modal";
+import { useNearViewport, usePrefersReducedMotion, useReveal, useScrollProgress, useTilt } from "@/components/boostov/motion";
+import { MESSAGES, PACK_SAVING, PACK_SEPARATE_TOTAL, PHONE_DISPLAY, PRICES, telHref, waHref } from "@/lib/contact";
 
 const faqs = [
   ["Est-ce qu’une application est nécessaire ?", "Non. Vos clients ouvrent votre profil directement depuis leur navigateur, sans rien installer."],
@@ -21,9 +20,19 @@ const faqs = [
 ];
 const connectFeatures = ["Carte NFC personnalisée", "Profil digital premium", "WhatsApp, téléphone, réseaux sociaux, Maps", "Galerie ou catalogue", "Enregistrer le contact", "Analytics des visites et clics", "Informations modifiables sans changer la carte"];
 const growFeatures = ["Expérience NFC après achat", "Avis Google optionnel", "Partage avec des proches", "Récompense unique", "Retour client et fidélisation", "Dashboard marchand", "Suivi des interactions"];
+const growSteps = [
+  { key: "merci", label: "Merci", icon: Heart, title: "Un merci chaleureux", copy: "Le client tape la carte après son achat : une page à vos couleurs le remercie.", img: "/img/grow-thanks.webp" },
+  { key: "avis", label: "Avis", icon: Star, title: "Avis Google, en option", copy: "Il peut noter sa visite et publier son avis sur Google Maps — s’il le souhaite.", img: "/img/grow-review.webp" },
+  { key: "partage", label: "Partage", icon: Share2, title: "Partage avec ses proches", copy: "Un bouton pour recommander votre adresse à ses amis.", img: "/img/grow-share.webp" },
+  { key: "recompense", label: "Récompense", icon: Gift, title: "Une récompense unique", copy: "Une carte de récompense à usage unique, à présenter lors de sa prochaine visite.", img: "/img/grow-reward.webp" },
+] as const;
 
-function Brand({ inverse = false }: { inverse?: boolean }) {
-  return <a href="#top" className="brand flex items-center gap-2.5" aria-label="Boostov — accueil"><Image src="/boostov-logo.png" alt="" width={36} height={36} className="h-9 w-9 rounded-xl object-cover" /><span className={`text-lg font-extrabold tracking-[-.04em] ${inverse ? "text-white" : "text-[#07142f]"}`}>BOOSTOV</span></a>;
+function Logo({ size = 34 }: { size?: number }) {
+  return <img src="/img/boostov-logo.webp" alt="" width={size} height={size} className="logo-img" style={{ width: size, height: size }} />;
+}
+
+function Brand() {
+  return <a href="#top" className="brand" aria-label="Boostov — accueil"><Logo /><span>boostov<em>.ma</em></span></a>;
 }
 
 function ThemeToggle() {
@@ -33,73 +42,257 @@ function ThemeToggle() {
     document.documentElement.style.colorScheme = nextDark ? "dark" : "light";
     window.localStorage.setItem("theme", nextDark ? "dark" : "light");
   };
-  return <button className="theme-toggle" type="button" onClick={toggleTheme} aria-label="Changer le thème clair ou sombre" title="Changer le thème"><Sun className="theme-icon-sun" size={18} /><Moon className="theme-icon-moon" size={18} /></button>;
+  return <button className="icon-btn" type="button" onClick={toggleTheme} aria-label="Changer le thème clair ou sombre" title="Changer le thème"><Sun className="theme-icon-sun" size={18} /><Moon className="theme-icon-moon" size={18} /></button>;
 }
 
-function ProductCard({ offer, price, copy, features, grow, onOrder }: { offer: Offer; price: number; copy: string; features: string[]; grow?: boolean; onOrder: (offer: Offer) => void }) {
-  return <article className={`product-card ${grow ? "grow" : ""}`}><div className="flex items-center justify-between gap-3"><h3>{offer.replace("Boostov ", "")}</h3>{grow ? <Sparkles className="text-[#68a7ff]" /> : <Radio className="text-[#0b5cff]" />}</div><p className="muted mt-3 text-[#64728a]">{copy}</p><div className="price">{price} <small>MAD</small></div><p className="muted text-sm text-[#64728a]">Livraison gratuite</p><ul className="feature-list">{features.map((feature) => <li key={feature}><span className="check"><Check size={13} strokeWidth={3} /></span>{feature}</li>)}</ul><button className={grow ? "btn-dark w-full" : "btn-primary w-full"} onClick={() => onOrder(offer)}>Commander {offer.replace("Boostov ", "")} <ArrowRight size={17} /></button></article>;
+function NfcWaves({ className = "" }: { className?: string }) {
+  return <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true"><path d="M7 8.5a5 5 0 0 1 0 7" /><path d="M11 6a8.5 8.5 0 0 1 0 12" /><path d="M15 3.5a12 12 0 0 1 0 17" /></svg>;
 }
 
-function OrderModal({ open, offer, onOpenChange }: { open: boolean; offer: Offer; onOpenChange: (open: boolean) => void }) {
-  const [selectedOffer, setSelectedOffer] = useState<Offer>(offer);
-  const [location, setLocation] = useState("");
-  const [locating, setLocating] = useState(false);
-  const [error, setError] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-  const [success, setSuccess] = useState<Success | null>(null);
+function PhoneFrame({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  return <div className={`phone ${className}`}><div className="phone-screen">{children}</div></div>;
+}
 
-  const shareLocation = () => {
-    setError("");
-    if (!navigator.geolocation) { setError("La géolocalisation n’est pas disponible sur cet appareil."); return; }
-    setLocating(true);
-    navigator.geolocation.getCurrentPosition(({ coords }) => { setLocation(`https://www.google.com/maps?q=${coords.latitude},${coords.longitude}`); setLocating(false); }, () => { setError("Localisation non partagée. Vous pouvez coller un lien Google Maps manuellement."); setLocating(false); }, { enableHighAccuracy: false, timeout: 10000 });
+function NfcCard({ variant = "signal", className = "", label }: { variant?: "signal" | "gold"; className?: string; label?: string }) {
+  return <div className={`nfc-card ${variant} ${className}`} aria-hidden="true"><div className="nfc-card-face"><div className="nfc-card-top"><Logo size={30} /><NfcWaves className="nfc-waves" /></div><div className="nfc-chip" /><div className="nfc-card-bottom"><b>{label ?? "boostov.ma"}</b><small>TAP · NFC · QR</small></div></div></div>;
+}
+
+function Hero({ reduced, onOrderPack }: { reduced: boolean; onOrderPack: string }) {
+  const stage = useRef<HTMLDivElement>(null);
+  const section = useRef<HTMLElement>(null);
+  const [screen, setScreen] = useState<"connect" | "grow">("connect");
+  const [tapping, setTapping] = useState(false);
+  useScrollProgress(section, !reduced);
+  useTilt(stage, !reduced);
+
+  const tap = () => {
+    if (tapping) return;
+    setTapping(true);
+    window.setTimeout(() => setScreen((s) => (s === "connect" ? "grow" : "connect")), reduced ? 0 : 380);
+    window.setTimeout(() => setTapping(false), reduced ? 0 : 900);
   };
+  useEffect(() => {
+    if (reduced) return;
+    const t = window.setTimeout(() => { setTapping(true); window.setTimeout(() => setTapping(false), 900); }, 900);
+    return () => window.clearTimeout(t);
+  }, [reduced]);
 
-  const submit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault(); setError(""); setSubmitting(true);
-    const form = new FormData(event.currentTarget);
-    const payload = { name: String(form.get("name") || "").trim(), phone: String(form.get("phone") || "").trim(), city: String(form.get("city") || "").trim(), offer: selectedOffer, quantity: Number(form.get("quantity")), location: location.trim(), website: String(form.get("website") || "") };
-    try {
-      const response = await fetch("/api/orders", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
-      const data = await response.json() as { message?: string };
-      if (!response.ok) throw new Error(data.message || "Votre commande n’a pas pu être envoyée.");
-      setSuccess({ offer: selectedOffer, quantity: payload.quantity, phone: payload.phone });
-    } catch (err) { setError(err instanceof Error ? err.message : "Un problème est survenu. Réessayez."); }
-    finally { setSubmitting(false); }
-  };
+  return <section ref={section} className="hero" id="top-hero">
+    <div className="hero-rings" aria-hidden="true"><i /><i /><i /></div>
+    <div className="wrap hero-grid">
+      <div className="hero-text">
+        <p className="kicker"><span className="dot" />Cartes NFC pour commerces · Maroc</p>
+        <h1>Un tap.<br /><span>Plus de business.</span></h1>
+        <p className="hero-sub"><b>Boostov Connect</b> présente votre commerce. <b>Boostov Grow</b> invite vos clients à laisser un avis, partager et revenir.</p>
+      </div>
+      <div className="stage-label" aria-live="polite"><span className={`chip ${screen}`}>{screen === "connect" ? "Connect" : "Grow"}</span>{screen === "connect" ? "Votre profil s’ouvre" : "Avis, partage, récompense"}<button type="button" onClick={tap} className="stage-tap">Tapez la carte <NfcWaves className="w14" /></button></div>
+      <div className="hero-actions">
+        <div className="hero-ctas">
+          <a className="btn btn-white" href={onOrderPack} target="_blank" rel="noreferrer" data-wa="pack"><MessageCircle size={19} />Commander le Pack · {PRICES.pack} DH</a>
+          <a className="btn btn-glass" href="#offres">Voir les offres <ArrowRight size={17} /></a>
+        </div>
+        <p className="hero-note"><Truck size={16} /> Livraison gratuite partout au Maroc</p>
+      </div>
+      <div ref={stage} className={`hero-stage ${tapping ? "is-tapping" : ""}`}>
+        <div className="hero-mega" aria-hidden="true"><span>TAP.</span><span className="outline">TAP.</span></div>
+        <PhoneFrame className="hero-phone">
+          <img className={screen === "connect" ? "on" : ""} src="/img/connect-profile.webp" alt="Page Boostov Connect réelle : profil d’un commerce de démonstration" width={390} height={844} fetchPriority="high" />
+          <img className={screen === "grow" ? "on" : ""} src="/img/grow-review.webp" alt="Parcours Boostov Grow réel : écran d’avis d’un commerce de démonstration" width={520} height={1125} loading="lazy" />
+          <span className="tap-ripple" aria-hidden="true" />
+        </PhoneFrame>
+        <button type="button" className="hero-card-btn" onClick={tap} aria-label={`Démo : taper la carte pour afficher ${screen === "connect" ? "Boostov Grow" : "Boostov Connect"}`}>
+          <NfcCard className="hero-card" />
+        </button>
+      </div>
+    </div>
+  </section>;
+}
 
-  return <Dialog open={open} onOpenChange={(next) => { onOpenChange(next); if (!next) { setSuccess(null); setError(""); } }}><DialogContent className="max-h-[92vh] overflow-y-auto border-0 bg-white p-0 shadow-2xl sm:max-w-[620px] max-sm:top-auto max-sm:bottom-0 max-sm:translate-y-0 max-sm:rounded-b-none">{success ? <div className="p-8 text-center sm:p-12"><div className="mx-auto mb-6 grid h-16 w-16 place-items-center rounded-full bg-[#e8f0ff] text-[#0b5cff]"><Check size={30} strokeWidth={3} /></div><DialogTitle className="text-3xl tracking-[-.04em]">Commande bien reçue 🎉</DialogTitle><DialogDescription className="mx-auto mt-3 max-w-md text-base leading-7">Merci ! Nous vous contacterons rapidement pour confirmer votre commande.</DialogDescription><div className="my-7 rounded-2xl bg-[#f4f7fb] p-5 text-left text-sm"><p><b>Produit :</b> {success.offer}</p><p className="mt-2"><b>Quantité :</b> {success.quantity}</p><p className="mt-2"><b>Téléphone :</b> {success.phone}</p></div><DialogClose className="btn-primary w-full">Fermer</DialogClose></div> : <><DialogHeader className="border-b border-[#e5eaf1] p-6 pr-14 sm:p-8 sm:pr-16"><p className="eyebrow">Commande Boostov</p><DialogTitle className="text-2xl tracking-[-.04em]">Votre business commence ici.</DialogTitle><DialogDescription>Quelques informations suffisent. Nous vous contactons ensuite pour confirmer.</DialogDescription></DialogHeader><form className="grid gap-4 p-6 pt-1 sm:p-8 sm:pt-2" onSubmit={submit}><input name="website" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" /><div className="field-grid"><div className="field"><label htmlFor="name">Nom *</label><input id="name" name="name" required minLength={2} autoComplete="name" placeholder="Votre nom" /></div><div className="field"><label htmlFor="phone">Téléphone *</label><input id="phone" name="phone" required inputMode="tel" autoComplete="tel" pattern="(0[67][0-9]{8}|\+212[67][0-9]{8})" placeholder="06XXXXXXXX" /></div></div><div className="field-grid"><div className="field"><label htmlFor="city">Ville *</label><input id="city" name="city" required minLength={2} autoComplete="address-level2" placeholder="Casablanca" /></div><div className="field"><label htmlFor="quantity">Quantité *</label><input id="quantity" name="quantity" type="number" min="1" max="100" defaultValue="1" required /></div></div><div className="field"><label htmlFor="offer">Offre *</label><select id="offer" value={selectedOffer} onChange={(e) => setSelectedOffer(e.target.value as Offer)}><option>Boostov Connect</option><option>Boostov Grow</option></select></div><div className="field"><label htmlFor="location">Localisation <span className="font-normal text-[#748199]">(optionnel)</span></label><input id="location" value={location} onChange={(e) => setLocation(e.target.value)} inputMode="url" placeholder="Collez un lien Google Maps" /></div><button type="button" className="btn-secondary w-full" onClick={shareLocation} disabled={locating}><Navigation size={17} />{locating ? "Localisation en cours…" : "Partager ma localisation"}</button><p className="text-xs leading-5 text-[#728098]">Votre position n’est demandée qu’après votre clic et sert uniquement à faciliter la livraison.</p>{error && <p className="form-error" role="alert">{error}</p>}<button className="btn-primary mt-2 w-full" type="submit" disabled={submitting}>{submitting ? "Envoi sécurisé…" : "Confirmer ma commande"} {!submitting && <ArrowRight size={17} />}</button></form></>}</DialogContent></Dialog>;
+function Ticker() {
+  const items: [typeof Radio, string][] = [[Radio, "NFC + QR code"], [Smartphone, "Sans application"], [Truck, "Livraison gratuite"], [Link2, "Profil modifiable"], [BarChart3, "Analytics"], [MessageCircle, "Support WhatsApp"]];
+  const row = items.map(([Icon, label]) => <span className="tick" key={label}><Icon size={16} />{label}</span>);
+  return <div className="ticker" aria-label="Points clés"><div className="ticker-track"><div className="ticker-row">{row}</div><div className="ticker-row" aria-hidden="true">{row}</div></div></div>;
+}
+
+function ConnectSection({ reduced, onOrder }: { reduced: boolean; onOrder: (o: Offer) => void }) {
+  const section = useRef<HTMLElement>(null);
+  const near = useNearViewport(section, "600px");
+  useScrollProgress(section, !reduced);
+  return <section ref={section} id="connect" className="sheet connect">
+    <div className="giant-word" aria-hidden="true">CONNECT</div>
+    <div className="wrap split">
+      <div className="split-top">
+        <p className="eyebrow rv">Boostov Connect · carte de visite digitale</p>
+        <h2 className="title rv">Votre commerce,<br /><span>en un tap.</span></h2>
+        <p className="lead rv">Un tap sur la carte ouvre votre profil : appel, WhatsApp, Instagram, itinéraire Maps, galerie et bouton « Enregistrer le contact ». Sans application.</p>
+      </div>
+      <div className="split-bottom">
+        <div className="action-grid rv">{[[Phone, "Appel"], [MessageCircle, "WhatsApp"], [MapPin, "Maps"], [Save, "Contact"]].map(([I, l]) => { const Icon = I as typeof Phone; return <span key={l as string}><Icon size={18} />{l as string}</span>; })}</div>
+        <ul className="ticks rv">{connectFeatures.map((f) => <li key={f}><Check size={15} strokeWidth={3} />{f}</li>)}</ul>
+        <div className="buy-row rv"><div><small>Boostov Connect</small><strong>{PRICES.connect} <em>DH</em></strong></div><button className="btn btn-blue" onClick={() => onOrder("Boostov Connect")}>Commander Connect <ArrowRight size={17} /></button></div>
+      </div>
+      <div className="split-visual rv">
+        <PhoneFrame className="scroll-phone">
+          {near ? <img className="scroll-shot" src="/img/connect-profile-full.webp" alt="Page publique Boostov Connect réelle, commerce de démonstration « Atlas Coffee Roasters »" width={390} height={2165} loading="lazy" decoding="async" /> : <div className="shot-placeholder" />}
+        </PhoneFrame>
+        <NfcCard className="float-card" />
+        <p className="shot-caption">Écran réel du produit · commerce de démonstration</p>
+      </div>
+    </div>
+  </section>;
+}
+
+function GrowSection({ reduced, onOrder }: { reduced: boolean; onOrder: (o: Offer) => void }) {
+  const section = useRef<HTMLElement>(null);
+  const near = useNearViewport(section, "500px");
+  const [active, setActive] = useState(0);
+  const [auto, setAuto] = useState(true);
+  useEffect(() => {
+    if (!near || !auto || reduced) return;
+    const t = window.setInterval(() => setActive((a) => (a + 1) % growSteps.length), 3200);
+    return () => window.clearInterval(t);
+  }, [near, auto, reduced]);
+  const step = growSteps[active];
+  return <section ref={section} id="grow" className="sheet grow">
+    <div className="giant-word gold" aria-hidden="true">GROW</div>
+    <div className="wrap split reverse">
+      <div className="split-top">
+        <p className="eyebrow gold rv">Boostov Grow · avis, partage, retour</p>
+        <h2 className="title rv">Chaque visite peut<br /><span className="gold-text">en amener une autre.</span></h2>
+        <p className="lead rv">Après l’achat, votre client tape la carte et suit un parcours simple. Touchez une étape pour voir l’écran réel.</p>
+      </div>
+      <div className="split-tabs">
+        <div className="steps-tabs rv" role="group" aria-label="Étapes du parcours Boostov Grow">
+          {growSteps.map((s, i) => { const Icon = s.icon; return <button key={s.key} type="button" aria-pressed={i === active} className={i === active ? "on" : ""} onClick={() => { setActive(i); setAuto(false); }}><b>{i + 1}</b><Icon size={17} />{s.label}</button>; })}
+        </div>
+      </div>
+      <div className="split-bottom">
+        <div className="step-detail rv" aria-live="polite"><h3>{step.title}</h3><p>{step.copy}</p></div>
+        <p className="note"><ShieldCheck size={17} /> La récompense n’est jamais conditionnée par la publication d’un avis Google.</p>
+        <ul className="ticks gold rv">{growFeatures.map((f) => <li key={f}><Check size={15} strokeWidth={3} />{f}</li>)}</ul>
+        <div className="buy-row rv"><div><small>Boostov Grow</small><strong>{PRICES.grow} <em>DH</em></strong></div><button className="btn btn-gold" onClick={() => onOrder("Boostov Grow")}>Commander Grow <ArrowRight size={17} /></button></div>
+      </div>
+      <div className="split-visual rv">
+        <PhoneFrame className="grow-phone">
+          {near ? growSteps.map((s, i) => <img key={s.key} className={i === active ? "on" : ""} src={s.img} alt={`Écran réel Boostov Grow : ${s.title} (commerce de démonstration)`} width={520} height={1125} loading="lazy" decoding="async" />) : <div className="shot-placeholder dark" />}
+        </PhoneFrame>
+        <NfcCard variant="gold" className="float-card" />
+        <p className="shot-caption">Écrans réels du produit · commerce de démonstration</p>
+      </div>
+    </div>
+  </section>;
+}
+
+function PackSection({ onOrder }: { onOrder: (o: Offer) => void }) {
+  return <section id="offres" className="sheet pack-sec">
+    <div className="wrap">
+      <p className="eyebrow light rv">Les offres</p>
+      <h2 className="title rv">Le Pack.<br /><span className="outline-text">Grow + Connect.</span></h2>
+      <article className="pack rv" aria-labelledby="pack-title">
+        <div className="pack-cards" aria-hidden="true"><NfcCard className="pc pc-connect" label="Connect" /><NfcCard variant="gold" className="pc pc-grow" label="Grow" /></div>
+        <div className="pack-body">
+          <span className="save-tag">Vous économisez {PACK_SAVING} DH</span>
+          <h3 id="pack-title">Pack Grow + Connect</h3>
+          <div className="pack-math" aria-label={`Grow ${PRICES.grow} DH plus Connect ${PRICES.connect} DH égale ${PACK_SEPARATE_TOTAL} DH séparément`}>
+            <span>Grow {PRICES.grow} DH</span><i>+</i><span>Connect {PRICES.connect} DH</span><i>=</i><s>{PACK_SEPARATE_TOTAL} DH</s>
+          </div>
+          <div className="pack-price"><strong>{PRICES.pack}</strong><em>DH</em><span className="was">au lieu de <s>{PACK_SEPARATE_TOTAL} DH</s></span></div>
+          <p className="pack-ship"><Truck size={18} /> Livraison gratuite</p>
+          <ul className="pack-list"><li><Check size={15} strokeWidth={3} />Boostov Connect : carte NFC + profil digital</li><li><Check size={15} strokeWidth={3} />Boostov Grow : parcours avis, partage, récompense</li></ul>
+          <a className="btn btn-white wide" href={waHref(MESSAGES.pack)} target="_blank" rel="noreferrer" data-wa="pack"><MessageCircle size={19} />Commander le Pack sur WhatsApp</a>
+        </div>
+      </article>
+      <div className="solo-grid">
+        <article className="solo rv"><div className="solo-top"><Radio size={20} /><h3>Connect</h3></div><p>Carte NFC + profil digital modifiable.</p><strong>{PRICES.connect} <em>DH</em></strong><small>Livraison gratuite</small><button className="btn btn-blue wide" onClick={() => onOrder("Boostov Connect")}>Commander Connect</button></article>
+        <article className="solo rv"><div className="solo-top"><Star size={20} /><h3>Grow</h3></div><p>Avis, partage et récompense après l’achat.</p><strong>{PRICES.grow} <em>DH</em></strong><small>Livraison gratuite</small><button className="btn btn-ink wide" onClick={() => onOrder("Boostov Grow")}>Commander Grow</button></article>
+      </div>
+    </div>
+  </section>;
+}
+
+function HowItWorks() {
+  const steps = [["01", "Commandez votre Boostov", "Choisissez Connect, Grow ou le Pack et envoyez votre demande."], ["02", "Nous préparons votre expérience", "Notre équipe confirme vos informations et configure votre solution."], ["03", "Commencez à l’utiliser", "Votre carte et votre expérience digitale sont prêtes à travailler pour vous."]];
+  return <section id="fonctionnement" className="sheet how">
+    <div className="wrap">
+      <p className="eyebrow rv">Comment ça marche</p>
+      <h2 className="title rv">Commandez.<br />Configurez. <span>Tap.</span></h2>
+      <ol className="how-grid">{steps.map(([n, t, c]) => <li className="how-step rv" key={n}><span className="how-n">{n}</span><h3>{t}</h3><p>{c}</p></li>)}</ol>
+    </div>
+  </section>;
+}
+
+function Faq() {
+  return <section id="faq" className="sheet faq">
+    <div className="wrap faq-grid">
+      <div><p className="eyebrow rv">FAQ</p><h2 className="title rv">Les réponses,<br />simplement.</h2></div>
+      <Accordion className="faq-panel" type="single" collapsible>{faqs.map(([q, a], i) => <AccordionItem value={`faq-${i}`} key={q}><AccordionTrigger className="faq-q">{q}</AccordionTrigger><AccordionContent className="faq-a">{a}</AccordionContent></AccordionItem>)}</Accordion>
+    </div>
+  </section>;
+}
+
+function FinalCta() {
+  return <section className="final">
+    <div className="hero-rings" aria-hidden="true"><i /><i /><i /></div>
+    <div className="wrap final-inner">
+      <p className="kicker"><span className="dot" />Votre prochaine connexion commence ici</p>
+      <h2>Prêt à booster<br />votre business ?</h2>
+      <div className="final-ctas">
+        <a className="btn btn-white" href={waHref(MESSAGES.order)} target="_blank" rel="noreferrer" data-wa="order"><MessageCircle size={19} />Écrire sur WhatsApp</a>
+        <a className="btn btn-glass" href={telHref} data-tel="final"><Phone size={18} />Appeler le {PHONE_DISPLAY}</a>
+      </div>
+    </div>
+  </section>;
 }
 
 export function BoostovSite() {
+  const root = useRef<HTMLDivElement>(null);
+  const reduced = usePrefersReducedMotion();
   const [menu, setMenu] = useState(false);
   const [orderOpen, setOrderOpen] = useState(false);
   const [offer, setOffer] = useState<Offer>("Boostov Connect");
   const order = (next: Offer = "Boostov Connect") => { setOffer(next); setOrderOpen(false); requestAnimationFrame(() => setOrderOpen(true)); };
+  useReveal(root, !reduced);
 
-  return <div className="site-shell" id="top"><header className="fixed inset-x-0 top-0 z-40 border-b border-white/60 bg-[#f8fafc]/85 backdrop-blur-xl"><div className="container-site flex h-[76px] items-center justify-between"><Brand /><nav className="hidden items-center gap-8 md:flex" aria-label="Navigation principale"><a className="nav-link" href="#produits">Produits</a><a className="nav-link" href="#fonctionnement">Comment ça marche</a><a className="nav-link" href="#faq">FAQ</a></nav><div className="hidden items-center gap-2 md:flex"><ThemeToggle /><button className="btn-primary min-h-[42px] px-5" onClick={() => order()}>Commander <ArrowRight size={16} /></button></div><div className="flex items-center gap-2 md:hidden"><ThemeToggle /><button className="menu-toggle grid h-11 w-11 place-items-center rounded-full border border-[#d8e0eb] bg-white" onClick={() => setMenu(!menu)} aria-label={menu ? "Fermer le menu" : "Ouvrir le menu"}>{menu ? <X /> : <Menu />}</button></div></div>{menu && <nav className="mobile-menu border-t border-[#e3e8ef] bg-white p-5 md:hidden"><div className="container-site grid gap-4"><a href="#produits" onClick={() => setMenu(false)}>Produits</a><a href="#fonctionnement" onClick={() => setMenu(false)}>Comment ça marche</a><a href="#faq" onClick={() => setMenu(false)}>FAQ</a><a href="https://www.instagram.com/boostov.ma/" target="_blank" rel="noreferrer">Instagram</a><button className="btn-primary mt-2" onClick={() => { setMenu(false); order(); }}>Commander</button></div></nav>}</header>
+  return <div ref={root} className="site" id="top">
+    <header className="topbar">
+      <div className="wrap topbar-inner">
+        <Brand />
+        <nav className="nav-desktop" aria-label="Navigation principale"><a href="#connect">Connect</a><a href="#grow">Grow</a><a href="#offres">Offres</a><a href="#fonctionnement">Comment ça marche</a><a href="#faq">FAQ</a></nav>
+        <div className="topbar-actions">
+          <ThemeToggle />
+          <a className="btn btn-wa-sm" href={waHref(MESSAGES.support)} target="_blank" rel="noreferrer" data-wa="header" aria-label="Écrire à Boostov sur WhatsApp"><MessageCircle size={16} /><span>WhatsApp</span></a>
+          <button className="icon-btn menu-btn" onClick={() => setMenu(!menu)} aria-expanded={menu} aria-label={menu ? "Fermer le menu" : "Ouvrir le menu"}>{menu ? <X size={20} /> : <Menu size={20} />}</button>
+        </div>
+      </div>
+      {menu && <nav className="mobile-menu" aria-label="Menu mobile"><div className="wrap">{[["#connect", "Boostov Connect"], ["#grow", "Boostov Grow"], ["#offres", "Offres & Pack"], ["#fonctionnement", "Comment ça marche"], ["#faq", "FAQ"]].map(([h, l]) => <a key={h} href={h} onClick={() => setMenu(false)}>{l}<ArrowRight size={16} /></a>)}<a href="https://www.instagram.com/boostov.ma/" target="_blank" rel="noreferrer">Instagram · @boostov.ma<ArrowRight size={16} /></a><a href={telHref} data-tel="menu">Appeler le {PHONE_DISPLAY}<Phone size={16} /></a></div></nav>}
+    </header>
 
-    <main><section className="container-site hero-grid"><div><p className="eyebrow">Votre business, amplifié.</p><h1 className="hero-title mt-5">Un tap.<br />Plus de <span>business.</span></h1><p className="section-copy">Boostov transforme une simple carte NFC en un outil digital pour présenter votre activité, partager vos contacts et développer votre clientèle.</p><div className="mt-8 flex flex-wrap gap-3"><button className="btn-primary" onClick={() => order()}>Commander maintenant <ArrowRight size={17} /></button><a className="btn-secondary" href="#produits">Découvrir Boostov</a></div><p className="mt-5 flex items-center gap-2 text-sm font-semibold text-[#52617a]"><ShieldCheck size={17} className="text-[#0b5cff]" /> Livraison gratuite partout au Maroc</p></div><div className="hero-visual" aria-label="Carte NFC Boostov et aperçu d’un profil digital"><div className="signal-orbit" /><div className="nfc-card"><div className="flex items-center justify-between"><div className="flex items-center gap-2"><Image src="/boostov-logo.png" alt="" width={36} height={36} className="h-9 w-9 rounded-lg" /><b className="tracking-[-.04em]">BOOSTOV</b></div><Radio size={24} className="text-[#4f9dff]" /></div><p className="absolute bottom-6 left-6 text-xs text-[#b8c8e8]">ONE TAP. MORE GROWTH.</p></div><div className="phone"><div className="profile-avatar">B</div><b className="block text-center">BOOSTOV Studio</b><p className="mt-1 text-center text-xs text-[#6b7790]">Digital business tools</p><div className="link-grid"><div className="profile-link"><MessageCircle className="mx-auto mb-2 text-[#0b5cff]" size={20} />WhatsApp</div><div className="profile-link"><Instagram className="mx-auto mb-2 text-[#0b5cff]" size={20} />Instagram</div><div className="profile-link"><MapPin className="mx-auto mb-2 text-[#0b5cff]" size={20} />Maps</div><div className="profile-link"><Save className="mx-auto mb-2 text-[#0b5cff]" size={20} />Contact</div></div><button className="mt-4 w-full rounded-xl bg-[#0b5cff] p-3 text-xs font-bold text-white">Enregistrer le contact</button></div><div className="hero-stat"><div className="flex items-center justify-between text-xs text-[#b9c9e5]"><span>Activité du profil</span><BarChart3 size={16} /></div><div className="mt-3 flex items-end gap-2"><strong className="text-3xl">+18%</strong><span className="mb-1 text-xs text-[#6ea9ff]">cette semaine</span></div><p className="mt-2 text-[10px] text-[#8093b6]">Données de démonstration</p></div></div></section>
-
-      <div className="benefit-strip"><div className="container-site benefit-grid">{[[Radio,"NFC + QR"],[Smartphone,"Sans application"],[ShieldCheck,"Livraison gratuite"],[Link2,"Profil modifiable"],[BarChart3,"Analytics"],[MessageCircle,"Support"]].map(([Icon,label]) => { const I = Icon as typeof Radio; return <div className="benefit-item" key={label as string}><I size={17} className="text-[#0b5cff]" />{label as string}</div>; })}</div></div>
-
-      <section id="produits" className="section container-site"><p className="eyebrow">Deux solutions</p><h2 className="section-title">Un objectif : faire avancer votre business.</h2><p className="section-copy">Choisissez l’expérience qui correspond à votre prochaine étape — mieux vous présenter ou faire revenir vos clients.</p><div className="product-grid"><ProductCard offer="Boostov Connect" price={349} copy="Votre profil professionnel, prêt à partager en un geste." features={connectFeatures} onOrder={order} /><ProductCard offer="Boostov Grow" price={429} copy="Un parcours pensé pour nourrir la relation après chaque visite." features={growFeatures} grow onOrder={order} /></div></section>
-
-      <section className="section dark-stage"><div className="container-site flow-grid"><div><p className="eyebrow text-[#69a7ff]">Boostov Connect</p><h2 className="section-title">Votre meilleur profil. Toujours à portée de tap.</h2><p className="section-copy text-[#aebed9]">Une expérience claire qui mène vos clients vers l’action — sans application, sans friction.</p><div className="flow-steps">{[[Radio,"Tap NFC"],[ContactRound,"Profil digital"],[MousePointerClick,"Contact, WhatsApp, Instagram, Maps"],[BarChart3,"Analytics"]].map(([Icon,label],i) => { const I = Icon as typeof Radio; return <div className="flow-step" key={label as string}><b><I size={19} /></b><span>{label as string}</span>{i < 3 && <ChevronRight size={17} className="text-[#5d7094]" />}</div>; })}</div></div><div className="profile-demo"><div className="profile-screen"><div className="profile-avatar">BM</div><h3 className="text-xl font-bold">Beldi Market</h3><p className="mt-1 text-sm text-[#6b7890]">Produits locaux • Rabat</p><div className="link-grid"><div className="profile-link"><MessageCircle className="mx-auto mb-2 text-[#0b5cff]" />WhatsApp</div><div className="profile-link"><MapPin className="mx-auto mb-2 text-[#0b5cff]" />Itinéraire</div><div className="profile-link"><Instagram className="mx-auto mb-2 text-[#0b5cff]" />Instagram</div><div className="profile-link"><Save className="mx-auto mb-2 text-[#0b5cff]" />Contact</div></div><div className="mt-5 rounded-2xl bg-white p-4 text-left"><p className="text-xs font-bold text-[#6b7890]">À DÉCOUVRIR</p><div className="mt-3 h-24 rounded-xl bg-gradient-to-r from-[#dce8ff] to-[#edf3ff]" /></div></div></div></div></section>
-
-      <section className="section container-site"><p className="eyebrow">Boostov Grow</p><h2 className="section-title">Chaque visite peut devenir une prochaine visite.</h2><p className="section-copy">Un parcours simple après l’achat, avec des choix clairs pour le client et une meilleure visibilité pour le commerçant.</p><div className="grow-journey">{[[Radio,"Tap","Le client approche sa carte."],[Sparkles,"Merci","Une expérience chaleureuse s’ouvre."],[CircleDot,"Avis","L’avis Google reste optionnel."],[Share2,"Partage","Le client peut recommander l’adresse."],[QrCode,"Récompense","Une récompense unique peut être proposée."],[Navigation,"Retour","Le lien avec l’enseigne continue."]].map(([Icon,title,copy],i) => { const I = Icon as typeof Radio; return <article className="journey-card" key={title as string}><b>{i+1}</b><I size={20} className="mb-3 text-[#0b5cff]" /><h3>{title as string}</h3><p>{copy as string}</p></article>; })}</div><p className="note"><strong>Important :</strong> la récompense n’est jamais conditionnée par la publication d’un avis Google.</p></section>
-
-      <section className="section bg-[#eef3f9]"><div className="container-site analytics-wrap"><div><p className="eyebrow">Analytics</p><h2 className="section-title">Comprendre ce qui attire l’attention.</h2><p className="section-copy">Visualisez les visites, les clics et les actions importantes pour mieux comprendre l’usage de votre profil.</p></div><div className="dashboard"><div className="dash-top"><div><p className="text-xs font-bold text-[#71809a]">APERÇU</p><h3 className="mt-1 font-bold">Activité du profil</h3></div><span className="rounded-full bg-[#e8f0ff] px-3 py-1 text-xs font-bold text-[#0b5cff]">Données démo</span></div><div className="stat-grid">{[["Vues","1 284"],["Clics","463"],["CTR","36%"],["Contacts","87"]].map(([k,v]) => <div className="stat-card" key={k}><span>{k}</span><strong>{v}</strong></div>)}</div><div className="chart-box">{[42,65,48,82,58,95,74,110,92,132,116,145].map((h,i) => <span className="bar" key={i} style={{height:h}} />)}</div><div className="mt-4 grid grid-cols-3 gap-2 text-xs"><span>WhatsApp · 42%</span><span>Instagram · 31%</span><span>Maps · 18%</span></div></div></div></section>
-
-      <section id="fonctionnement" className="section container-site"><p className="eyebrow">Simple dès le départ</p><h2 className="section-title">Commandez. Configurez. Tap.</h2><div className="steps-grid">{[["01","Commandez votre Boostov","Choisissez Connect ou Grow et envoyez votre demande."],["02","Nous préparons votre expérience","Notre équipe confirme vos informations et configure votre solution."],["03","Commencez à l’utiliser","Votre carte et votre expérience digitale sont prêtes à travailler pour vous."]].map(([n,t,c]) => <article className="step-card" key={n}><span className="step-number">ÉTAPE {n}</span><h3>{t}</h3><p>{c}</p></article>)}</div></section>
-
-      <section id="faq" className="section container-site faq-wrap"><div><p className="eyebrow">FAQ</p><h2 className="section-title">Les réponses, simplement.</h2></div><Accordion className="faq-panel" type="single" collapsible>{faqs.map(([q,a],i) => <AccordionItem value={`faq-${i}`} key={q}><AccordionTrigger className="py-6 text-left text-base hover:no-underline">{q}</AccordionTrigger><AccordionContent className="pb-6 pr-8 text-[.95rem] leading-7 text-[#60708b]">{a}</AccordionContent></AccordionItem>)}</Accordion></section>
-
-      <section className="container-site pb-[120px]"><div className="final-cta"><p className="text-sm font-bold uppercase tracking-[.14em] text-[#cae0ff]">Votre prochaine connexion commence ici</p><h2 className="relative mt-4 text-[clamp(2.5rem,6vw,5.5rem)] font-extrabold leading-[.95] tracking-[-.06em]">Prêt à booster<br />votre business ?</h2></div></section>
+    <main>
+      <Hero reduced={reduced} onOrderPack={waHref(MESSAGES.pack)} />
+      <Ticker />
+      <ConnectSection reduced={reduced} onOrder={order} />
+      <GrowSection reduced={reduced} onOrder={order} />
+      <PackSection onOrder={order} />
+      <HowItWorks />
+      <Faq />
+      <FinalCta />
     </main>
 
-    <footer className="footer"><div className="container-site"><div className="footer-grid"><div><Brand inverse /><p className="mt-5 max-w-xs text-sm leading-6 text-[#91a2c0]">Des outils digitaux conçus pour aider les entreprises marocaines à mieux se connecter et grandir.</p></div><div><b className="text-sm">Navigation</b><div className="mt-4 grid gap-3"><a href="#produits">Produits</a><a href="#fonctionnement">Comment ça marche</a><a href="#faq">FAQ</a></div></div><div><b className="text-sm">Aide</b><div className="mt-4 grid gap-3"><a href="#faq">FAQ</a><a href="https://wa.me/212650532156?text=Bonjour%20BOOSTOV%2C%20j%E2%80%99aimerais%20avoir%20de%20l%E2%80%99aide." target="_blank" rel="noreferrer">Support WhatsApp</a></div></div><div><b className="text-sm">Suivre</b><div className="mt-4 grid gap-3"><a href="https://www.instagram.com/boostov.ma/" target="_blank" rel="noreferrer">Instagram · @boostov.ma</a><a href="https://wa.me/212650532156" target="_blank" rel="noreferrer">+212 650-532156</a></div></div></div><div className="flex flex-wrap justify-between gap-4 border-t border-white/10 pt-6 text-xs text-[#7385a4]"><span>© {new Date().getFullYear()} BOOSTOV</span><div className="flex gap-5"><a href="#">Confidentialité</a><a href="#">Conditions</a></div></div></div></footer>
-    <a className="whatsapp-float" href="https://wa.me/212650532156?text=Bonjour%20BOOSTOV%2C%20j%E2%80%99aimerais%20avoir%20de%20l%E2%80%99aide." target="_blank" rel="noreferrer" aria-label="Contacter le support BOOSTOV sur WhatsApp"><MessageCircle size={19} /><span>Support WhatsApp</span></a>
+    <footer className="footer">
+      <div className="wrap">
+        <div className="footer-grid">
+          <div><Brand /><p className="footer-copy">Des outils digitaux conçus pour aider les entreprises marocaines à mieux se connecter et grandir.</p></div>
+          <div><b>Navigation</b><a href="#connect">Boostov Connect</a><a href="#grow">Boostov Grow</a><a href="#offres">Offres</a><a href="#faq">FAQ</a></div>
+          <div><b>Contact</b><a href={waHref(MESSAGES.support)} target="_blank" rel="noreferrer" data-wa="footer">WhatsApp · {PHONE_DISPLAY}</a><a href={telHref} data-tel="footer">Téléphone · {PHONE_DISPLAY}</a><a href="https://www.instagram.com/boostov.ma/" target="_blank" rel="noreferrer">Instagram · @boostov.ma</a></div>
+        </div>
+        <div className="footer-bottom"><span>© {new Date().getFullYear()} Boostov · boostov.ma</span><span><QrCode size={14} /> NFC + QR code</span></div>
+      </div>
+    </footer>
+
+    <div className="sticky-bar" role="region" aria-label="Contact rapide">
+      <a className="btn btn-wa" href={waHref(MESSAGES.order)} target="_blank" rel="noreferrer" data-wa="sticky"><MessageCircle size={20} />Commander sur WhatsApp</a>
+      <a className="btn-call" href={telHref} aria-label={`Appeler Boostov au ${PHONE_DISPLAY}`} data-tel="sticky"><Phone size={20} /></a>
+    </div>
     <OrderModal key={offer} open={orderOpen} offer={offer} onOpenChange={setOrderOpen} />
   </div>;
 }
