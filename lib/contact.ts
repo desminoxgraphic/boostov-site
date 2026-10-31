@@ -3,7 +3,6 @@ export const PHONE_LOCAL = "0789216699";
 export const PHONE_E164 = "+212789216699";
 export const PHONE_DISPLAY = "07 89 21 66 99";
 export const INSTAGRAM_URL = "https://www.instagram.com/boostov.ma/";
-export const LOGIN_URL = "https://boostov-connect.vercel.app/login";
 
 export const MESSAGES = {
   info: "Salam Boostov, bghit n3ref ktar 3la Connect w Grow.",

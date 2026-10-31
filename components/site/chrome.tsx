@@ -1,12 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
-import { LogIn, Menu, X } from "lucide-react";
-import { INSTAGRAM_URL, LOGIN_URL, PHONE_DISPLAY } from "@/lib/contact";
+import { Menu, Truck, X } from "lucide-react";
+import { INSTAGRAM_URL, PHONE_DISPLAY } from "@/lib/contact";
+import { fr } from "@/content/fr";
 import { NavLinks } from "@/components/site/nav-links";
-import { Button, WaButton } from "@/components/site/ui";
+import { WaButton } from "@/components/site/ui";
 
 function Brand() {
-  return <Link href="/" className="brand" aria-label="Boostov, accueil"><Image src="/img/boostov-logo.webp" alt="" width={32} height={32} priority /><span>boostov<span>.ma</span></span></Link>;
+  return <Link href="/" className="brand" aria-label={fr.nav.home}><Image src="/img/boostov-logo.webp" alt="" width={32} height={32} priority /><span>boostov<span>.ma</span></span></Link>;
 }
 
 function InstagramIcon() {
@@ -19,14 +20,10 @@ export function SiteHeader() {
       <Brand />
       <nav className="nav" aria-label="Navigation principale"><NavLinks /></nav>
       <div className="header-actions">
-        <WaButton msg="info" variant="ghost" className="only-desktop">WhatsApp</WaButton>
-        <Button href={LOGIN_URL} variant="primary" className="btn-login"><LogIn size={16} aria-hidden="true" />Connexion</Button>
+        <WaButton msg="info" className="btn--header">{fr.nav.whatsapp}</WaButton>
         <details className="menu">
-          <summary aria-label="Menu"><Menu className="i-open" size={20} aria-hidden="true" /><X className="i-close" size={20} aria-hidden="true" /></summary>
-          <nav className="menu-panel" aria-label="Menu mobile">
-            <NavLinks mobile />
-            <WaButton msg="info" block>Écrire sur WhatsApp</WaButton>
-          </nav>
+          <summary aria-label={fr.nav.menu}><Menu className="i-open" size={20} aria-hidden="true" /><X className="i-close" size={20} aria-hidden="true" /></summary>
+          <nav className="menu-panel" aria-label="Menu mobile"><NavLinks mobile /></nav>
         </details>
       </div>
     </div>
@@ -34,21 +31,22 @@ export function SiteHeader() {
 }
 
 export function SiteFooter() {
+  const f = fr.footer;
   return <footer className="footer">
     <div className="container">
       <div className="footer-grid">
-        <div className="footer-col"><Brand /><p>Cartes et stands NFC + QR code pour les commerces locaux au Maroc.</p></div>
-        <div className="footer-col"><b>Site</b><Link href="/produits">Produits</Link><Link href="/revendeurs">Revendeurs</Link><Link href="/faq">FAQ</Link></div>
-        <div className="footer-col"><b>Contact</b>
+        <div className="footer-col"><Brand /><p>{f.tagline}</p><p className="footer-delivery"><Truck size={16} aria-hidden="true" />{fr.labels.delivery}</p></div>
+        <div className="footer-col"><b>{f.site}</b><Link href="/produits">{fr.nav.produits}</Link><Link href="/revendeurs">{fr.nav.revendeurs}</Link><Link href="/faq">{fr.nav.faq}</Link></div>
+        <div className="footer-col"><b>{f.contact}</b>
           <WaButton msg="info" variant="ghost-dark">WhatsApp {PHONE_DISPLAY}</WaButton>
-          <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer"><InstagramIcon />@boostov.ma</a>
+          <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer"><InstagramIcon />Instagram {f.instagram}</a>
         </div>
       </div>
-      <div className="footer-bottom"><span>© {new Date().getFullYear()} Boostov</span><span>Powered by boostov.ma</span></div>
+      <div className="footer-bottom"><span>© {new Date().getFullYear()} Boostov · Agadir, Maroc</span><span className="footer-legal"><Link href="/mentions-legales">{f.legalNotice}</Link><Link href="/confidentialite">{f.privacy}</Link></span></div>
     </div>
   </footer>;
 }
 
 export function StickyWa() {
-  return <div className="sticky-wa"><WaButton msg="info" block size="lg">Commander sur WhatsApp</WaButton></div>;
+  return <div className="sticky-wa"><WaButton msg="info" block size="lg">{fr.home.hero.cta}</WaButton></div>;
 }

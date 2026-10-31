@@ -68,6 +68,13 @@ test("every product WhatsApp message names the product", () => {
   }
 });
 
+test("public site never exposes the reseller system or a login", () => {
+  for (const file of [...SITE_FILES, "content/fr.ts"]) {
+    const text = readFileSync(file, "utf8");
+    assert.doesNotMatch(text, /boostov-connect|LOGIN_URL|Connexion(?! impossible)/, file);
+  }
+});
+
 test("visible copy never says Cardify", () => {
   for (const file of SITE_FILES) {
     assert.doesNotMatch(readFileSync(file, "utf8"), /cardify/i, file);
