@@ -9,6 +9,12 @@ const tracked = execFileSync("git", ["ls-files", "-co", "--exclude-standard"], {
   .split("\n")
   .filter((f) => f && !/\.(png|jpe?g|webp|svg|ico|woff2?)$/i.test(f) && f !== "package-lock.json" && !f.startsWith("tests/"));
 
+const SITE_FILES = tracked.filter((f) => /^(app|components\/site|lib)\/.*\.tsx?$/.test(f) && !f.startsWith("app/api"));
+
+test("site has the four pages", () => {
+  for (const page of ["app/page.tsx", "app/produits/page.tsx", "app/revendeurs/page.tsx", "app/faq/page.tsx"]) assert.ok(tracked.includes(page), page);
+});
+
 test("no old Boostov phone number remains in any format", () => {
   const offenders = [];
   for (const file of tracked) {
@@ -45,14 +51,14 @@ test("prices match the brief", () => {
 });
 
 test("no old prices or the old pack remain in site copy", () => {
-  for (const file of ["components/boostov-site.tsx", "app/layout.tsx", "lib/contact.ts"]) {
+  for (const file of SITE_FILES) {
     const text = readFileSync(file, "utf8");
-    assert.doesNotMatch(text, /(349|429|649)|Grow \+ Connect|Pack/, file);
+    assert.doesNotMatch(text, /\b(349|429|649)\b|Grow \+ Connect|\bPack\b/, file);
   }
 });
 
 test("site copy never hard-codes a DH price outside the pricing config", () => {
-  assert.doesNotMatch(readFileSync("components/boostov-site.tsx", "utf8"), /\d+ ?DH/);
+  for (const file of SITE_FILES.filter((f) => f.endsWith(".tsx"))) assert.doesNotMatch(readFileSync(file, "utf8"), /\d+ ?DH/, file);
 });
 
 test("every product WhatsApp message names the product", () => {
@@ -63,7 +69,7 @@ test("every product WhatsApp message names the product", () => {
 });
 
 test("visible copy never says Cardify", () => {
-  for (const file of ["components/boostov-site.tsx", "app/layout.tsx"]) {
+  for (const file of SITE_FILES) {
     assert.doesNotMatch(readFileSync(file, "utf8"), /cardify/i, file);
   }
 });
