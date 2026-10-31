@@ -23,7 +23,7 @@ export default function FaqPage() {
       <div className="faq-layout">
         <aside className="faq-aside">
           <Card raised>
-            <h2 className="h3">Une autre question ?</h2>
+            <h2 className="h3">Une autre question&nbsp;?</h2>
             <p className="small">Écrivez-nous, on vous répond sur WhatsApp.</p>
             <WaButton msg="info" block>Écrire sur WhatsApp</WaButton>
           </Card>

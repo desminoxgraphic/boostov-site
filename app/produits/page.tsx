@@ -56,8 +56,8 @@ export default function Produits() {
           <figure className="stand-main figure-reset">
             <Image src="/products/stand-sample.jpg" alt="Photo réelle du stand Boostov vierge, avant personnalisation" width={800} height={1000} sizes="(min-width: 960px) 560px, 100vw" />
             <span className="hotspot" style={{ left: "38%", top: "26%" }}><i /><b /><span>Votre logo</span></span>
-            <span className="hotspot hotspot--l" style={{ left: "42%", top: "44%" }}><i /><b /><span>QR code</span></span>
-            <span className="hotspot" style={{ left: "46%", top: "58%" }}><i /><b /><span>Puce NFC</span></span>
+            <span className="hotspot hotspot--l" style={{ left: "41%", top: "37%" }}><i /><b /><span>QR code</span></span>
+            <span className="hotspot" style={{ left: "47%", top: "50%" }}><i /><b /><span>Puce NFC</span></span>
             <span className="hotspot hotspot--l" style={{ left: "40%", top: "74%" }}><i /><b /><span>Vos couleurs</span></span>
           </figure>
           <figure className="stand-inset figure-reset">
