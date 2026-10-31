@@ -6,6 +6,7 @@ import { ArrowRight } from "lucide-react";
 
 export const NAV = [
   { href: "/produits", label: "Produits" },
+  { href: "/stands", label: "Stands" },
   { href: "/revendeurs", label: "Revendeurs" },
   { href: "/faq", label: "FAQ" },
 ] as const;

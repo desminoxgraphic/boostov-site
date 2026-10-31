@@ -9,7 +9,7 @@ const tracked = execFileSync("git", ["ls-files", "-co", "--exclude-standard"], {
   .split("\n")
   .filter((f) => f && !/\.(png|jpe?g|webp|svg|ico|woff2?)$/i.test(f) && f !== "package-lock.json" && !f.startsWith("tests/"));
 
-const SITE_FILES = tracked.filter((f) => /^(app|components\/site|lib)\/.*\.tsx?$/.test(f) && !f.startsWith("app/api"));
+const SITE_FILES = tracked.filter((f) => /^(app|components\/site|lib|content)\/.*\.tsx?$/.test(f) && !f.startsWith("app/api"));
 
 test("site has the four pages", () => {
   for (const page of ["app/page.tsx", "app/produits/page.tsx", "app/revendeurs/page.tsx", "app/faq/page.tsx"]) assert.ok(tracked.includes(page), page);
@@ -69,10 +69,25 @@ test("every product WhatsApp message names the product", () => {
 });
 
 test("public site never exposes the reseller system or a login", () => {
-  for (const file of [...SITE_FILES, "content/fr.ts"]) {
+  for (const file of SITE_FILES) {
     const text = readFileSync(file, "utf8");
     assert.doesNotMatch(text, /boostov-connect|LOGIN_URL|Connexion(?! impossible)/, file);
   }
+});
+
+test("no leftover Illustration placeholders", () => {
+  for (const file of SITE_FILES) assert.doesNotMatch(readFileSync(file, "utf8"), />\s*Illustration\s*</, file);
+});
+
+test("every page sets its own title", () => {
+  const titles = new Set();
+  for (const file of ["content/fr.ts", "content/pages.fr.ts", "content/blog.fr.ts", "app/blog/page.tsx"]) {
+    for (const m of readFileSync(file, "utf8").matchAll(/[tT]itle: "([^"]+\| Boostov)"/g)) {
+      assert.ok(!titles.has(m[1]), `duplicate title ${m[1]}`);
+      titles.add(m[1]);
+    }
+  }
+  assert.ok(titles.size >= 9, `only ${titles.size} titles found`);
 });
 
 test("visible copy never says Cardify", () => {

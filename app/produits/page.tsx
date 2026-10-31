@@ -1,79 +1,67 @@
-import Image from "next/image";
+import Link from "next/link";
 import type { Metadata } from "next";
-import { Check, Image as ImageIcon, Info, MessageCircle, Nfc, Palette, QrCode, Truck, Type } from "lucide-react";
-import { PRICING } from "@/src/config/pricing";
-import { PRODUCTS } from "@/lib/site";
-import { CardArt, StandArt } from "@/components/site/illustrations";
-import { PageHead, Section, SectionHead, WaButton } from "@/components/site/ui";
+import { ArrowRight, Check, Info } from "lucide-react";
+import { produits as t } from "@/content/pages.fr";
+import { POSTS } from "@/content/blog.fr";
+import { pageMeta } from "@/lib/meta";
+import { breadcrumb, product } from "@/lib/schema";
+import { JsonLd } from "@/components/site/json-ld";
+import { Photo } from "@/components/site/photo";
+import { Breadcrumbs, PageHero, Section, SectionHead, WaButton } from "@/components/site/ui";
 
-export const metadata: Metadata = {
-  title: "Produits : Connect et Grow",
-  description: `Boostov Connect (carte ${PRICING.connect.carte} DH, stand ${PRICING.connect.stand} DH) et Boostov Grow (carte ${PRICING.grow.carte} DH, stand ${PRICING.grow.stand} DH). Stand personnalisé avec logo, couleurs et QR code.`,
-  alternates: { canonical: "/produits" },
-  openGraph: { title: "Produits Boostov : Connect et Grow", url: "/produits" },
-};
-
-const custom = [
-  { icon: ImageIcon, label: "Votre logo" },
-  { icon: Palette, label: "Vos couleurs" },
-  { icon: QrCode, label: "Votre QR code" },
-  { icon: Nfc, label: "Puce NFC" },
-  { icon: Type, label: "Nom, slogan, réseaux" },
-];
+export const metadata: Metadata = pageMeta({ title: t.title, description: t.description, path: "/produits", og: "produits" });
 
 export default function Produits() {
   return <>
-    <PageHead eyebrow="Produits" title={<>Connect et Grow.<br /><span className="accent">En carte ou en stand.</span></>} intro="Deux produits, deux formats. Chaque carte et chaque stand est personnalisé pour votre commerce." />
+    <JsonLd data={[
+      breadcrumb([["Produits", "/produits"]]),
+      ...t.products.map((p) => product(p.name, p.does, `/products/${p.stand.image}-1080.webp`, [{ name: `${p.name} carte`, price: p.card.price }, { name: `${p.name} stand`, price: p.stand.price }])),
+    ]} />
+    <PageHero eyebrow={t.eyebrow} title={t.h1} intro={t.lead}>
+      <div className="hero-jump rise rise-4">{t.products.map((p) => <a key={p.id} href={`#${p.id}`} className={`jump jump--${p.accent}`}>{p.name}<ArrowRight size={16} aria-hidden="true" /></a>)}</div>
+    </PageHero>
+    <Breadcrumbs items={[["Produits", "/produits"]]} />
 
-    <Section>
-      {PRODUCTS.map((p, i) => <article key={p.id} id={p.id} className={`product${i % 2 ? " product--flip" : ""}`} aria-labelledby={`${p.id}-t`}>
-        <div className={`art product-art reveal${p.id === "grow" ? " art--dark" : ""}`}>
-          <span className={`tag${p.id === "grow" ? " tag--dark" : ""}`}>Illustration</span>
-          <figure><CardArt tone={p.id} /><figcaption>Carte</figcaption></figure>
-          <figure><StandArt tone={p.id} /><figcaption>Stand</figcaption></figure>
-        </div>
-        <div className="product-copy">
+    {t.products.map((p, i) => <Section key={p.id} id={p.id} tone={i % 2 ? "tint" : "white"}>
+      <article className={`prod6 prod6--${p.accent}`} aria-labelledby={`${p.id}-t`}>
+        <div className="prod6-head">
           <span className="eyebrow">{p.name}</span>
-          <h2 id={`${p.id}-t`} className="h2">{p.tagline}</h2>
-          <p className="lead">{p.summary}</p>
-          <ul className="feature-list">{p.features.map((f) => <li key={f}><Check size={18} aria-hidden="true" />{f}</li>)}</ul>
-          <div className="price-pair">
-            <div className="price-box"><span>Carte</span><strong>{p.prices.carte}<em>DH</em></strong></div>
-            <div className="price-box"><span>Stand</span><strong>{p.prices.stand}<em>DH</em></strong></div>
-          </div>
-          <div className="order-row">
-            <WaButton msg={p.msg.carte} variant="ghost" block>Commander la carte</WaButton>
-            <WaButton msg={p.msg.stand} block>Commander le stand</WaButton>
-          </div>
+          <h2 id={`${p.id}-t`} className="h2">{p.oneLine}</h2>
+          <p className="lead">{p.does}</p>
+          <p className="prod6-for"><Check size={18} aria-hidden="true" />{p.forWho}</p>
         </div>
-      </article>)}
+        <div className="prod6-formats">
+          {([["Carte", p.card], ["Stand", p.stand]] as const).map(([fmt, f]) => <div key={fmt} className="format reveal">
+            <figure className={`format-media${fmt === "Carte" ? " format-media--cutout" : ""}`}>
+              <Photo name={f.image as "connect-card"} alt={f.alt} sizes="(min-width: 960px) 360px, 92vw" />
+              <figcaption className="tag">{f.label}</figcaption>
+            </figure>
+            <div className="format-body">
+              <p className="format-name">{p.name.replace("Boostov ", "")} · {fmt}</p>
+              <p className="format-price">{f.price}<em>DH</em></p>
+              <WaButton msg={f.msg as "connectCarte"} block variant={fmt === "Carte" ? "ghost" : "wa"}>Commander {fmt === "Carte" ? "la carte" : "le stand"}</WaButton>
+            </div>
+          </div>)}
+        </div>
+      </article>
+    </Section>)}
 
-      <div className="notes">
-        <p className="note-item"><Truck size={18} aria-hidden="true" />Livraison partout au Maroc : +{PRICING.delivery} DH sur chaque commande.</p>
-        <p className="note-item"><Info size={18} aria-hidden="true" />Prix par carte ou par stand. La personnalisation est incluse.</p>
-        <p className="note-item"><MessageCircle size={18} aria-hidden="true" />Une question avant de commander ? Écrivez-nous sur WhatsApp.</p>
+    <Section id="comparatif">
+      <SectionHead eyebrow="Comparatif" title="Connect et Grow, côte à côte." intro="Connect fait venir les contacts, Grow fait venir les avis et les retours. Vous pouvez aussi prendre les deux." />
+      <div className="table-wrap reveal">
+        <table className="ctable">
+          <caption className="sr-only">{t.table.caption}</caption>
+          <thead><tr>{t.table.cols.map((c, i) => <th key={i} scope="col">{c}</th>)}</tr></thead>
+          <tbody>{t.table.rows.map(([label, a, b]) => <tr key={label}><th scope="row">{label}</th><td>{a}</td><td>{b}</td></tr>)}</tbody>
+        </table>
       </div>
+      <ul className="notes">{t.notes.map((n) => <li key={n} className="note-item"><Info size={18} aria-hidden="true" />{n}</li>)}</ul>
+      <div className="section-cta center"><WaButton msg="info" size="lg">Une question ? Écrivez-nous</WaButton></div>
     </Section>
 
-    <Section id="stand" tone="dark">
-      <div className="custom">
-        <div className="art custom-art reveal">
-          <span className="tag">Illustration</span>
-          <StandArt tone="connect" callouts />
-        </div>
-        <div className="custom-side">
-          <SectionHead eyebrow="Stand personnalisé" title="Un stand à votre image." intro="Chaque stand est préparé pour un seul commerce. Nous définissons le design avec vous sur WhatsApp." />
-          <div className="chips">{custom.map(({ icon: Icon, label }) => <span key={label} className="chip"><Icon size={16} aria-hidden="true" />{label}</span>)}</div>
-          <div className="photo-row">
-            <figure className="custom-photo">
-              <span className="tag tag--photo">Photo réelle</span>
-              <Image src="/products/stand-sample.jpg" alt="Photo réelle du stand Boostov vierge, avant personnalisation" width={800} height={1000} sizes="140px" />
-            </figure>
-            <p>Le stand avant personnalisation. Votre design est appliqué sur la face avant.</p>
-          </div>
-          <div><WaButton msg="stand" size="lg">Commander un stand personnalisé</WaButton></div>
-        </div>
-      </div>
+    <Section tone="tint">
+      <SectionHead eyebrow={t.related} title="Guides pour bien choisir." />
+      <ul className="grid-3">{POSTS.map((post) => <li key={post.slug}><Link className="post-card" href={`/blog/${post.slug}`}><span className="eyebrow">Guide</span><b>{post.h1}</b><span className="small">{post.description}</span><span className="link-arrow">Lire<ArrowRight size={16} aria-hidden="true" /></span></Link></li>)}</ul>
     </Section>
   </>;
 }

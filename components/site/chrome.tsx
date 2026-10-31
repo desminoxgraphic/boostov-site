@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { Menu, Truck, X } from "lucide-react";
 import { INSTAGRAM_URL, PHONE_DISPLAY } from "@/lib/contact";
@@ -7,7 +6,9 @@ import { NavLinks } from "@/components/site/nav-links";
 import { WaButton } from "@/components/site/ui";
 
 function Brand() {
-  return <Link href="/" className="brand" aria-label={fr.nav.home}><Image src="/img/boostov-logo.webp" alt="" width={32} height={32} priority /><span>boostov<span>.ma</span></span></Link>;
+  return <Link href="/" className="brand" aria-label={fr.nav.home}>
+    {/* eslint-disable-next-line @next/next/no-img-element -- 32px logo; next/image would ship ~33 KB of JS for it. */}
+    <img src="/img/boostov-logo.webp" alt="" width={32} height={32} /><span>boostov<span>.ma</span></span></Link>;
 }
 
 function InstagramIcon() {
@@ -36,7 +37,7 @@ export function SiteFooter() {
     <div className="container">
       <div className="footer-grid">
         <div className="footer-col"><Brand /><p>{f.tagline}</p><p className="footer-delivery"><Truck size={16} aria-hidden="true" />{fr.labels.delivery}</p></div>
-        <div className="footer-col"><b>{f.site}</b><Link href="/produits">{fr.nav.produits}</Link><Link href="/revendeurs">{fr.nav.revendeurs}</Link><Link href="/faq">{fr.nav.faq}</Link></div>
+        <div className="footer-col"><b>{f.site}</b><Link href="/produits">{fr.nav.produits}</Link><Link href="/revendeurs">{fr.nav.revendeurs}</Link><Link href="/stands">Stands</Link><Link href="/faq">{fr.nav.faq}</Link><Link href="/blog">Guides</Link></div>
         <div className="footer-col"><b>{f.contact}</b>
           <WaButton msg="info" variant="ghost-dark">WhatsApp {PHONE_DISPLAY}</WaButton>
           <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer"><InstagramIcon />Instagram {f.instagram}</a>

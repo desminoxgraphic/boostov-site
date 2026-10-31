@@ -3,17 +3,13 @@ import type { Metadata } from "next";
 import { ArrowRight, Check, Plus, X } from "lucide-react";
 import { LAUNCH_PRICE_ACTIVE, PRICING } from "@/src/config/pricing";
 import { fr } from "@/content/fr";
+import { pageMeta } from "@/lib/meta";
 import { Photo } from "@/components/site/photo";
 import { Badge, Button, Section, SectionHead, WaButton } from "@/components/site/ui";
 
 const t = fr.home;
 
-export const metadata: Metadata = {
-  title: { absolute: fr.meta.homeTitle },
-  description: fr.meta.homeDescription,
-  alternates: { canonical: "/" },
-  openGraph: { title: fr.meta.homeTitle, description: fr.meta.homeDescription, url: "/" },
-};
+export const metadata: Metadata = pageMeta({ title: fr.meta.homeTitle, description: fr.meta.homeDescription, path: "/", og: "home" });
 
 export default function Home() {
   return <>
@@ -94,7 +90,7 @@ export default function Home() {
           <SectionHead eyebrow={t.stand.eyebrow} title={t.stand.title} intro={t.stand.lead} />
           <ul className="check-list">{t.stand.items.map((it) => <li key={it}><Check aria-hidden="true" />{it}</li>)}</ul>
           <div className="price-inline"><span>Stand Connect <b>{PRICING.connect.stand} DH</b></span><span>Stand Grow <b>{PRICING.grow.stand} DH</b></span></div>
-          <div><WaButton msg="stand" size="lg">{t.stand.cta}</WaButton></div>
+          <div className="actions-row"><WaButton msg="stand" size="lg">{t.stand.cta}</WaButton><Link className="link-arrow" href="/stands#apercu">Essayer l’aperçu de votre stand<ArrowRight size={16} aria-hidden="true" /></Link></div>
         </div>
       </div>
     </Section>

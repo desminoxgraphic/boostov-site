@@ -47,3 +47,22 @@ export function PageHead({ eyebrow, title, intro, children }: { eyebrow: string;
     </div>
   </header>;
 }
+
+/** Dark inner-page hero: eyebrow, H1, answer-first lead, optional media on the side. */
+export function PageHero({ eyebrow, title, intro, media, children }: { eyebrow: string; title: React.ReactNode; intro: React.ReactNode; media?: React.ReactNode; children?: React.ReactNode }) {
+  return <header className={`page-hero${media ? " page-hero--media" : ""}`}>
+    <div className="container page-hero-inner">
+      <div className="page-hero-copy">
+        <span className="eyebrow eyebrow--light rise">{eyebrow}</span>
+        <h1 className="rise rise-2">{title}</h1>
+        <p className="lead rise rise-3">{intro}</p>
+        {children}
+      </div>
+      {media && <div className="page-hero-media rise rise-3">{media}</div>}
+    </div>
+  </header>;
+}
+
+export function Breadcrumbs({ items }: { items: [string, string][] }) {
+  return <nav className="crumbs container" aria-label="Fil d’Ariane"><ol><li><Link href="/">Accueil</Link></li>{items.map(([name, href], i) => <li key={href}>{i === items.length - 1 ? <span aria-current="page">{name}</span> : <Link href={href}>{name}</Link>}</li>)}</ol></nav>;
+}

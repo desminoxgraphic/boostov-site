@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
-import { PHONE_E164 } from "@/lib/contact";
+import { organization } from "@/lib/schema";
+import { JsonLd } from "@/components/site/json-ld";
 import { SITE_URL } from "@/lib/site";
 import { SiteFooter, SiteHeader, StickyWa } from "@/components/site/chrome";
 import "./globals.css";
@@ -11,29 +12,21 @@ export const metadata: Metadata = {
   title: { default: "Boostov · Cartes et stands NFC pour commerces au Maroc", template: "%s · Boostov" },
   description,
   icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" },
-  openGraph: { title: "Boostov", description, url: SITE_URL, siteName: "boostov.ma", locale: "fr_MA", type: "website", images: [{ url: "/boostov-logo.png", alt: "Boostov" }] },
-  twitter: { card: "summary", title: "Boostov", description },
-  alternates: { canonical: "/" },
+  openGraph: { title: "Boostov", description, url: SITE_URL, siteName: "boostov.ma", locale: "fr_MA", type: "website", images: [{ url: "/og/home.jpg", width: 1200, height: 630, alt: "Boostov, cartes et stands NFC" }] },
+  twitter: { card: "summary_large_image", title: "Boostov", description, images: ["/og/home.jpg"] },
+  alternates: { canonical: "/", languages: { "fr-MA": "/", "x-default": "/" } },
 };
 
 export const viewport: Viewport = { themeColor: "#ffffff", width: "device-width", initialScale: 1 };
 
-const organization = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  name: "Boostov",
-  url: SITE_URL,
-  logo: `${SITE_URL}/boostov-logo.png`,
-  sameAs: ["https://www.instagram.com/boostov.ma/"],
-  contactPoint: [{ "@type": "ContactPoint", telephone: PHONE_E164, contactType: "customer service", areaServed: "MA", availableLanguage: ["fr", "ar"] }],
-};
+
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="fr">
       <head>
         <link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organization) }} />
+        <JsonLd data={organization} />
       </head>
       <body>
         <a className="skip" href="#contenu">Aller au contenu</a>
