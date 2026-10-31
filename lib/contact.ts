@@ -14,7 +14,7 @@ export const MESSAGES = {
   stand: "Salam, bghit Stand personnalisé (logo, couleurs, QR code)",
   kit5: "Salam, bghit précommande Kit 5 revendeur",
   kit10: "Salam, bghit précommande Kit 10 revendeur",
-  reseller: "Salam, bghit nwlli revendeur Boostov",
+  reseller: "Salam, bghit précommande kit revendeur (Kit 5 wla Kit 10)",
 } as const;
 
 export type MessageKey = keyof typeof MESSAGES;

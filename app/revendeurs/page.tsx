@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { BadgeCheck, Check, CreditCard, GraduationCap, Info, LayoutDashboard, MessageCircle, Package, Store, UserCheck } from "lucide-react";
+import { BadgeCheck, Check, GraduationCap, Info, MessageCircle, Package, Store, Truck, UserCheck } from "lucide-react";
 import { LAUNCH_PRICE_ACTIVE, PRICING } from "@/src/config/pricing";
 import { Badge, Card, PageHead, Section, SectionHead, WaButton } from "@/components/site/ui";
 
@@ -11,15 +11,9 @@ export const metadata: Metadata = {
 };
 
 const kits = [
-  { name: "Kit 5", kit: PRICING.kits.kit5, msg: "kit5" },
+  { name: "Kit 5", kit: PRICING.kits.kit5, msg: "kit5", featured: false },
   { name: "Kit 10", kit: PRICING.kits.kit10, msg: "kit10", featured: true },
 ] as const;
-
-const gets = [
-  { icon: CreditCard, title: "Des cartes Boostov", copy: "5 ou 10 cartes selon le kit choisi." },
-  { icon: LayoutDashboard, title: "Accès au système", copy: "L’accès au système Boostov inclus dans le kit." },
-  { icon: GraduationCap, title: "Une formation", copy: "Pour comprendre les produits et les présenter aux commerces." },
-];
 
 const steps = [
   { icon: MessageCircle, title: "Précommandez sur WhatsApp", copy: "Choisissez le Kit 5 ou le Kit 10." },
@@ -32,30 +26,30 @@ const forWho = ["Vous avez 18 ans ou plus", "Vous connaissez des commerces dans 
 
 export default function Revendeurs() {
   return <>
-    <PageHead eyebrow="Revendeurs" title={<>Proposez Boostov<br /><span className="accent">dans votre ville.</span></>} intro="Un kit pour démarrer : des cartes, l’accès au système et une formation.">
+    <PageHead eyebrow="Revendeurs" title={<>Les kits<br /><span className="accent">revendeur.</span></>} intro="Des cartes Boostov, l’accès au système et une formation, dans un seul kit.">
       <Badge><UserCheck size={14} aria-hidden="true" />Réservé aux 18 ans et plus</Badge>
     </PageHead>
 
     <Section tone="tint">
-      <SectionHead eyebrow="Les kits" title="Deux kits pour commencer." />
-      <div className="grid-2">
-        {kits.map(({ name, kit, msg, ...k }) => <Card key={name} as="article" raised className={`kit reveal${"featured" in k ? " kit--featured" : ""}`}>
-          <div className="kit-head"><h3>{name}</h3>{LAUNCH_PRICE_ACTIVE && <Badge tone="solid">Prix de lancement, 10 premiers kits</Badge>}</div>
-          <p className="kit-price">{kit.price}<em>DH</em></p>
-          <ul className="check-list">
-            <li><Check aria-hidden="true" />{kit.cartes} cartes</li>
-            <li><Check aria-hidden="true" />Accès au système</li>
-            <li><Check aria-hidden="true" />Formation</li>
-          </ul>
-          <WaButton msg={msg} block size="lg">Précommander le {name}</WaButton>
-        </Card>)}
+      <SectionHead eyebrow="Comparer" title="Kit 5 ou Kit 10." center />
+      <div className="compare reveal" role="table" aria-label="Comparaison des kits revendeur">
+        {kits.map(({ name, kit, msg, featured }) => <div key={name} className={`compare-col${featured ? " compare-col--featured" : ""}`} role="rowgroup">
+          <div className="compare-head" role="row">
+            <h3 role="columnheader">{name}</h3>
+            {LAUNCH_PRICE_ACTIVE && <Badge tone="solid">Prix de lancement, 10 premiers kits</Badge>}
+          </div>
+          <div className="compare-row" role="row"><small>Cartes</small><span role="cell"><Check aria-hidden="true" />{kit.cartes} cartes</span></div>
+          <div className="compare-row" role="row"><small>Système</small><span role="cell"><Check aria-hidden="true" />Accès inclus</span></div>
+          <div className="compare-row" role="row"><small>Formation</small><span role="cell"><Check aria-hidden="true" />Incluse</span></div>
+          <div className="compare-price" role="row"><strong role="cell">{kit.price}<em>DH</em></strong><span>+{PRICING.delivery} DH livraison</span></div>
+          <div className="compare-cta"><WaButton msg={msg} block variant={featured ? "wa" : "ghost"}>Précommander</WaButton></div>
+        </div>)}
       </div>
-      <p className="disclaimer"><Info size={20} aria-hidden="true" />Aucun revenu n’est promis ni garanti : vos résultats dépendent uniquement de vos ventes. Livraison +{PRICING.delivery} DH.</p>
-    </Section>
-
-    <Section>
-      <SectionHead eyebrow="Ce que vous recevez" title="Tout est dans le kit." />
-      <div className="grid-3">{gets.map(({ icon: Icon, title, copy }) => <div key={title} className="feature reveal"><span className="icon-tile"><Icon size={22} aria-hidden="true" /></span><h3>{title}</h3><p>{copy}</p></div>)}</div>
+      <div className="notes">
+        <p className="note-item"><Check size={18} aria-hidden="true" />Inclus : les cartes, l’accès au système et la formation.</p>
+        <p className="note-item"><Truck size={18} aria-hidden="true" />Non inclus : la livraison, +{PRICING.delivery} DH.</p>
+        <p className="note-item"><Info size={18} aria-hidden="true" />Aucun revenu n’est promis ni garanti : vos résultats dépendent de vos ventes.</p>
+      </div>
     </Section>
 
     <Section tone="dark">
@@ -68,7 +62,7 @@ export default function Revendeurs() {
         <SectionHead eyebrow="Pour qui ?" title="Le bon profil." intro="Ce programme est réservé aux personnes majeures." />
         <Card raised className="reveal">
           <ul className="check-list check-list--spaced">{forWho.map((t) => <li key={t}><BadgeCheck aria-hidden="true" />{t}</li>)}</ul>
-          <WaButton msg="reseller" block size="lg">Poser une question</WaButton>
+          <WaButton msg="reseller" block size="lg">Précommander un kit</WaButton>
         </Card>
       </div>
     </Section>

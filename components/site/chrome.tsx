@@ -19,13 +19,13 @@ export function SiteHeader() {
       <Brand />
       <nav className="nav" aria-label="Navigation principale"><NavLinks /></nav>
       <div className="header-actions">
-        <Button href={LOGIN_URL} variant="ghost" className="only-desktop"><LogIn size={16} aria-hidden="true" />Connexion</Button>
-        <WaButton msg="info" className="only-desktop">WhatsApp</WaButton>
+        <WaButton msg="info" variant="ghost" className="only-desktop">WhatsApp</WaButton>
+        <Button href={LOGIN_URL} variant="primary" className="btn-login"><LogIn size={16} aria-hidden="true" />Connexion</Button>
         <details className="menu">
           <summary aria-label="Menu"><Menu className="i-open" size={20} aria-hidden="true" /><X className="i-close" size={20} aria-hidden="true" /></summary>
           <nav className="menu-panel" aria-label="Menu mobile">
             <NavLinks mobile />
-            <Button href={LOGIN_URL} variant="ghost" block><LogIn size={16} aria-hidden="true" />Connexion</Button>
+            <WaButton msg="info" block>Écrire sur WhatsApp</WaButton>
           </nav>
         </details>
       </div>

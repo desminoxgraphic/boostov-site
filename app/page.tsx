@@ -1,64 +1,64 @@
-import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ArrowRight, Nfc, QrCode, Smartphone, Sparkles, Star } from "lucide-react";
+import { ArrowRight, Package, Smartphone, Star, Store } from "lucide-react";
 import { PRICING } from "@/src/config/pricing";
-import { PRODUCTS, STEPS } from "@/lib/site";
-import { Badge, Button, Card, Section, SectionHead, WaButton } from "@/components/site/ui";
+import { STEPS } from "@/lib/site";
+import { CardArt, StandArt, StepArt } from "@/components/site/illustrations";
+import { Badge, Button, Section, SectionHead, WaButton } from "@/components/site/ui";
 
 export const metadata: Metadata = { alternates: { canonical: "/" } };
 
-const icons = { connect: Smartphone, grow: Star } as const;
+const entries = [
+  { href: "/produits#connect", icon: Smartphone, title: "Connect", copy: "Votre page de contact en un tap." },
+  { href: "/produits#grow", icon: Star, title: "Grow", copy: "Avis, partage et retour client." },
+  { href: "/produits#stand", icon: Store, title: "Stands", copy: "Personnalisés à vos couleurs." },
+  { href: "/revendeurs", icon: Package, title: "Revendeurs", copy: "Kits de 5 ou 10 cartes." },
+];
 
 export default function Home() {
-  const [connect, grow] = PRODUCTS;
   return <>
     <section className="hero">
-      <div className="container hero-grid">
-        <div className="hero-copy">
-          <Badge><Nfc size={14} aria-hidden="true" />NFC + QR code · Maroc</Badge>
-          <h1 className="display rise">Votre commerce, <span className="accent">à&nbsp;portée de tap.</span></h1>
-          <p className="lead rise rise-2">Une carte ou un stand personnalisé sur votre comptoir. Vos clients tapent ou scannent pour vous contacter, laisser un avis et revenir.</p>
-          <div className="hero-actions rise rise-3">
-            <Button href="/produits" size="lg">Voir les produits<ArrowRight size={18} aria-hidden="true" /></Button>
-            <WaButton msg="info" variant="ghost" size="lg">Écrire sur WhatsApp</WaButton>
-          </div>
-          <div className="hero-meta rise rise-4"><span><Smartphone size={16} aria-hidden="true" />Sans application</span><span><QrCode size={16} aria-hidden="true" />QR si pas de NFC</span></div>
+      <div className="container hero-inner">
+        <Badge tone="dark">Cartes et stands NFC + QR · Maroc</Badge>
+        <h1 className="rise">Un tap.<br /><span>Votre commerce.</span></h1>
+        <p className="lead rise rise-2">Vos clients tapent ou scannent au comptoir pour vous contacter, laisser un avis et revenir.</p>
+        <div className="hero-actions rise rise-3">
+          <WaButton msg="info" size="lg">Commander sur WhatsApp</WaButton>
+          <Button href="/produits" variant="ghost-dark" size="lg">Voir les produits<ArrowRight size={18} aria-hidden="true" /></Button>
         </div>
-        <div className="showcase rise rise-3" aria-label="Écrans réels Boostov, commerce de démonstration">
-          <div className="phone phone--back float float-2"><Image src={grow.img.src} alt="Écran réel Boostov Grow : avis client, commerce de démonstration" width={grow.img.w} height={grow.img.h} sizes="240px" /></div>
-          <div className="phone phone--front float"><Image src={connect.img.src} alt="Écran réel Boostov Connect : page d’un commerce de démonstration" width={connect.img.w} height={connect.img.h} sizes="240px" priority /></div>
-          <span className="showcase-tag showcase-tag--a"><i />Connect · page du commerce</span>
-          <span className="showcase-tag showcase-tag--b"><i />Grow · avis et retour</span>
-          <p className="showcase-note">Écrans réels · commerce de démonstration</p>
+        <div className="hero-art rise rise-4">
+          <div className="art-card float"><CardArt tone="connect" /></div>
+          <div className="art-stand float float-2"><StandArt tone="grow" /></div>
+          <span className="tag tag--dark">Illustration</span>
         </div>
       </div>
     </section>
 
-    <Section tone="tint">
-      <SectionHead eyebrow="Deux produits" title="Choisissez ce dont votre commerce a besoin." />
-      <div className="grid-2">
-        {PRODUCTS.map((p) => { const Icon = icons[p.id]; return <Card key={p.id} as="article" interactive className="overview reveal">
-          <div className="overview-top"><span className="overview-icon"><Icon size={22} aria-hidden="true" /></span><span className="price-from">dès <b>{p.prices.carte} DH</b></span></div>
-          <h3 className="h3">{p.name}</h3>
-          <p className="small">{p.summary}</p>
-          <Link className="link-arrow" href={`/produits#${p.id}`}>Découvrir {p.name.split(" ")[1]}<ArrowRight size={16} aria-hidden="true" /></Link>
-        </Card>; })}
-      </div>
-    </Section>
+    <div className="container entry">
+      <nav className="entry-grid" aria-label="Accès rapide">
+        {entries.map(({ href, icon: Icon, title, copy }) => <Link key={title} href={href} className="entry-card">
+          <span className="icon-tile"><Icon size={20} aria-hidden="true" /></span>
+          <b>{title}<ArrowRight size={16} aria-hidden="true" /></b>
+          <span>{copy}</span>
+        </Link>)}
+      </nav>
+    </div>
 
     <Section>
       <SectionHead eyebrow="Comment ça marche" title="Prêt en trois étapes." />
       <ol className="grid-3">
-        {STEPS.map((s, i) => <li key={s.title} className="step reveal"><span className="step-n">{i + 1}</span><h3>{s.title}</h3><p>{s.copy}</p></li>)}
+        {STEPS.map((s, i) => <li key={s.title} className="step-card reveal">
+          <div className="art"><span className="tag">Illustration</span><StepArt step={(i + 1) as 1 | 2 | 3} /></div>
+          <h3><span className="step-n">{i + 1}</span>{s.title}</h3>
+          <p>{s.copy}</p>
+        </li>)}
       </ol>
     </Section>
 
-    <section className="section section--tint flush-top">
+    <section className="section flush-top">
       <div className="container">
         <div className="cta-band reveal">
           <div className="stack stack--sm">
-            <Badge tone="dark"><Sparkles size={14} aria-hidden="true" />Personnalisé à votre image</Badge>
             <h2 className="h2">Équipez votre comptoir.</h2>
             <p className="lead">Carte ou stand, Connect ou Grow. Commande sur WhatsApp, livraison partout au Maroc (+{PRICING.delivery} DH).</p>
           </div>
