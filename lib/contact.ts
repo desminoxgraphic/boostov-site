@@ -1,17 +1,23 @@
-// Single source of truth for Boostov contact details and prices.
+// Single source of truth for Boostov contact details and WhatsApp messages.
 export const PHONE_LOCAL = "0789216699";
 export const PHONE_E164 = "+212789216699";
 export const PHONE_DISPLAY = "07 89 21 66 99";
-
-export const PRICES = { connect: 349, grow: 429, pack: 649 } as const;
-export const PACK_SEPARATE_TOTAL = PRICES.connect + PRICES.grow;
-export const PACK_SAVING = PACK_SEPARATE_TOTAL - PRICES.pack;
+export const INSTAGRAM_URL = "https://www.instagram.com/boostov.ma/";
+export const LOGIN_URL = "https://boostov-connect.vercel.app/login";
 
 export const MESSAGES = {
-  support: "Bonjour Boostov, j’aimerais avoir des informations.",
-  order: "Bonjour Boostov, je souhaite commander. Pouvez-vous m’aider à choisir entre Connect, Grow et le Pack Grow + Connect ?",
-  pack: `Bonjour Boostov, je souhaite commander le Pack Grow + Connect à ${PRICES.pack} DH (livraison gratuite).`,
+  info: "Salam Boostov, bghit n3ref ktar 3la Connect w Grow.",
+  connectCarte: "Salam, bghit Carte Connect personnalisée",
+  connectStand: "Salam, bghit Stand Connect personnalisé",
+  growCarte: "Salam, bghit Carte Grow personnalisée",
+  growStand: "Salam, bghit Stand Grow personnalisé",
+  stand: "Salam, bghit Stand personnalisé (logo, couleurs, QR code)",
+  kit5: "Salam, bghit précommande Kit 5 revendeur",
+  kit10: "Salam, bghit précommande Kit 10 revendeur",
+  reseller: "Salam, bghit nwlli revendeur Boostov",
 } as const;
+
+export type MessageKey = keyof typeof MESSAGES;
 
 export const telHref = `tel:${PHONE_E164}`;
 export function waHref(message?: string) {

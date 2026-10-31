@@ -3,8 +3,8 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { PHONE_E164 } from "@/lib/contact";
 import "./globals.css";
 
-const title = "Boostov | Cartes NFC & solutions digitales pour entreprises au Maroc";
-const description = "Boostov Connect et Boostov Grow : cartes NFC, profil digital, avis Google, partage et récompenses pour faire revenir vos clients. Pack Grow + Connect à 649 DH, livraison gratuite.";
+const title = "Boostov | Cartes et stands NFC + QR pour commerces au Maroc";
+const description = "Boostov Connect et Boostov Grow : cartes et stands personnalisés NFC + QR code pour les commerces locaux au Maroc. Commande sur WhatsApp.";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://boostov.ma"),
@@ -39,7 +39,6 @@ export default function RootLayout({
       <head>
         <link rel="preload" href="/fonts/bricolage-latin.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
         <link rel="preload" href="/fonts/jakarta-latin.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
-        <link rel="preload" href="/img/connect-profile.webp" as="image" type="image/webp" />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organization) }} />
       </head>
       <body className="antialiased"><ThemeProvider>{children}</ThemeProvider></body>

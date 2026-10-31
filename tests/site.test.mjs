@@ -2,7 +2,8 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
-import { PACK_SAVING, PACK_SEPARATE_TOTAL, PHONE_E164, PHONE_LOCAL, PRICES, telHref, waHref, MESSAGES } from "../lib/contact.ts";
+import { PHONE_E164, PHONE_LOCAL, telHref, waHref, MESSAGES } from "../lib/contact.ts";
+import { PRICING } from "../src/config/pricing.ts";
 
 const tracked = execFileSync("git", ["ls-files", "-co", "--exclude-standard"], { encoding: "utf8" })
   .split("\n")
@@ -24,7 +25,7 @@ test("WhatsApp and call links use +212789216699", () => {
   assert.equal(PHONE_E164, "+212789216699");
   assert.equal(telHref, "tel:+212789216699");
   assert.equal(waHref(), "https://wa.me/212789216699");
-  assert.match(waHref(MESSAGES.pack), /^https:\/\/wa\.me\/212789216699\?text=/);
+  assert.match(waHref(MESSAGES.connectStand), /^https:\/\/wa\.me\/212789216699\?text=/);
 });
 
 test("no hard-coded wa.me or tel: number outside lib/contact.ts", () => {
@@ -34,20 +35,35 @@ test("no hard-coded wa.me or tel: number outside lib/contact.ts", () => {
   }
 });
 
-test("pack message names the pack and its price", () => {
-  const text = decodeURIComponent(waHref(MESSAGES.pack).split("text=")[1]);
-  assert.match(text, /Pack Grow \+ Connect/);
-  assert.match(text, /649 DH/);
+test("prices match the brief", () => {
+  assert.deepEqual(PRICING, {
+    connect: { carte: 200, stand: 250 },
+    grow: { carte: 250, stand: 300 },
+    delivery: 40,
+    kits: { kit5: { cartes: 5, price: 250 }, kit10: { cartes: 10, price: 350 } },
+  });
 });
 
-test("pack pricing uses only the site's own prices", () => {
-  assert.deepEqual(PRICES, { connect: 349, grow: 429, pack: 649 });
-  assert.equal(PACK_SEPARATE_TOTAL, 778);
-  assert.equal(PACK_SAVING, 129);
+test("no old prices or the old pack remain in site copy", () => {
+  for (const file of ["components/boostov-site.tsx", "app/layout.tsx", "lib/contact.ts"]) {
+    const text = readFileSync(file, "utf8");
+    assert.doesNotMatch(text, /(349|429|649)|Grow \+ Connect|Pack/, file);
+  }
+});
+
+test("site copy never hard-codes a DH price outside the pricing config", () => {
+  assert.doesNotMatch(readFileSync("components/boostov-site.tsx", "utf8"), /\d+ ?DH/);
+});
+
+test("every product WhatsApp message names the product", () => {
+  assert.match(MESSAGES.connectStand, /Stand Connect personnalisé/);
+  for (const key of ["connectCarte", "connectStand", "growCarte", "growStand", "kit5", "kit10"]) {
+    assert.match(MESSAGES[key], /Connect|Grow|Kit/, key);
+  }
 });
 
 test("visible copy never says Cardify", () => {
-  for (const file of ["components/boostov-site.tsx", "components/boostov/order-modal.tsx", "app/layout.tsx"]) {
+  for (const file of ["components/boostov-site.tsx", "app/layout.tsx"]) {
     assert.doesNotMatch(readFileSync(file, "utf8"), /cardify/i, file);
   }
 });
