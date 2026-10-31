@@ -1,7 +1,7 @@
 // Single source of truth for Boostov contact details and WhatsApp messages.
-export const PHONE_LOCAL = "0789216699";
-export const PHONE_E164 = "+212789216699";
-export const PHONE_DISPLAY = "07 89 21 66 99";
+export const PHONE_LOCAL = "0709272476";
+export const PHONE_E164 = "+212709272476";
+export const PHONE_DISPLAY = "07 09 27 24 76";
 export const INSTAGRAM_URL = "https://www.instagram.com/boostov.ma/";
 
 export const MESSAGES = {

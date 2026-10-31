@@ -15,23 +15,24 @@ test("site has the four pages", () => {
   for (const page of ["app/page.tsx", "app/produits/page.tsx", "app/revendeurs/page.tsx", "app/faq/page.tsx"]) assert.ok(tracked.includes(page), page);
 });
 
-test("no old Boostov phone number remains in any format", () => {
+test("no old Boostov phone numbers remain in any format", () => {
   const offenders = [];
   for (const file of tracked) {
     let text;
     try { text = readFileSync(file, "utf8"); } catch { continue; }
     // Strip separators so "+212 650-532156", "0650 53 21 56", "212650532156" all collapse to the same digits.
-    if (text.replace(/[\s.\-()]/g, "").includes("650532156")) offenders.push(file);
+    const digits = text.replace(/[\s.\-()]/g, "");
+    if (["650532156", "789216699"].some((old) => digits.includes(old))) offenders.push(file);
   }
   assert.deepEqual(offenders, []);
 });
 
-test("WhatsApp and call links use +212789216699", () => {
-  assert.equal(PHONE_LOCAL, "0789216699");
-  assert.equal(PHONE_E164, "+212789216699");
-  assert.equal(telHref, "tel:+212789216699");
-  assert.equal(waHref(), "https://wa.me/212789216699");
-  assert.match(waHref(MESSAGES.connectStand), /^https:\/\/wa\.me\/212789216699\?text=/);
+test("WhatsApp and call links use +212709272476", () => {
+  assert.equal(PHONE_LOCAL, "0709272476");
+  assert.equal(PHONE_E164, "+212709272476");
+  assert.equal(telHref, "tel:+212709272476");
+  assert.equal(waHref(), "https://wa.me/212709272476");
+  assert.match(waHref(MESSAGES.connectStand), /^https:\/\/wa\.me\/212709272476\?text=/);
 });
 
 test("no hard-coded wa.me or tel: number outside lib/contact.ts", () => {

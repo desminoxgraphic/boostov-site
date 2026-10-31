@@ -95,7 +95,7 @@ export const revendeurs = {
   launch: "Prix de lancement, 10 premiers kits",
   photoAlt: "Cartes NFC blanches empilées",
   compareTitle: "Kit 5 ou Kit 10",
-  rows: ["Cartes NFC Boostov", "Accès au système", "Formation", "Livraison"],
+  rows: ["Cartes NFC Boostov", "Accès au système", "Formation", "Commande"],
   inside: {
     title: "Ce qu’il y a dans le kit",
     items: [

@@ -34,7 +34,7 @@ export default function Revendeurs() {
             <tr><th scope="row">{t.rows[0]}</th>{kits.map((k) => <td key={k.name} className={k.featured ? "is-featured" : undefined}><b>{k.kit.cartes}</b></td>)}</tr>
             <tr><th scope="row">{t.rows[1]}</th>{kits.map((k) => <td key={k.name} className={k.featured ? "is-featured" : undefined}><Check size={18} aria-label="Inclus" /></td>)}</tr>
             <tr><th scope="row">{t.rows[2]}</th>{kits.map((k) => <td key={k.name} className={k.featured ? "is-featured" : undefined}><Check size={18} aria-label="Incluse" /></td>)}</tr>
-            <tr><th scope="row">{t.rows[3]}</th>{kits.map((k) => <td key={k.name} className={k.featured ? "is-featured" : undefined}>+{PRICING.delivery} DH</td>)}</tr>
+            <tr><th scope="row">{t.rows[3]}</th>{kits.map((k) => <td key={k.name} className={k.featured ? "is-featured" : undefined}>Sur WhatsApp</td>)}</tr>
             <tr className="ctable-price"><th scope="row">Prix</th>{kits.map((k) => <td key={k.name} className={k.featured ? "is-featured" : undefined}><strong>{k.kit.price}</strong> DH</td>)}</tr>
             <tr className="ctable-cta"><td />{kits.map((k) => <td key={k.name} className={k.featured ? "is-featured" : undefined}><WaButton msg={k.msg} block variant={k.featured ? "wa" : "ghost"} className="btn--compact">{t.cta}</WaButton></td>)}</tr>
           </tbody>
