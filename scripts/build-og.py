@@ -24,7 +24,7 @@ PAGES = {
     "produits": ("Connect ou Grow ?", "Comparatif des cartes et stands NFC Boostov.", "connect-stand.jpg"),
     "stands": ("Stand NFC personnalisé", "Votre logo, vos couleurs, NFC + QR code.", "grow-stand-avis.jpg"),
     "revendeurs": ("Devenir revendeur NFC", f"Kits Boostov dès {kit5} DH. Réservé aux 18 ans et plus.", "kit-cards.jpg"),
-    "faq": ("Questions fréquentes", "Livraison, NFC ou QR, personnalisation.", "connect-stand.jpg"),
+    "faq": ("Questions fréquentes", "Prix, NFC ou QR, personnalisation.", "connect-stand.jpg"),
     "blog": ("Guides pour les commerces", "Avis Google, NFC et QR code.", "grow-stand-avis.jpg"),
     "blog-avis": ("Demander des avis Google dans les règles", "Guide Boostov", "grow-stand-avis.jpg"),
     "blog-nfc-qr": ("Carte NFC ou QR code ?", "Guide Boostov", "connect-stand.jpg"),
@@ -80,7 +80,7 @@ for name, (title, sub, photo) in PAGES.items():
         d.text((64, y), line, font=tf, fill=WHITE)
         y += 74
     d.text((64, y + 16), sub, font=ImageFont.truetype(REG, 30), fill=MUTED)
-    d.text((64, 548), "WhatsApp · Livraison partout au Maroc", font=ImageFont.truetype(BOLD, 24), fill=(143, 176, 255))
+    d.text((64, 548), "Commande sur WhatsApp · Maroc", font=ImageFont.truetype(BOLD, 24), fill=(143, 176, 255))
     im.save(OUT / f"{name}.jpg", quality=85, optimize=True, progressive=True)
 
 print(sorted(x.name for x in OUT.iterdir()))

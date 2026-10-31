@@ -46,7 +46,6 @@ test("prices match the brief", () => {
   assert.deepEqual(PRICING, {
     connect: { carte: 200, stand: 250 },
     grow: { carte: 250, stand: 300 },
-    delivery: 40,
     kits: { kit5: { cartes: 5, price: 250 }, kit10: { cartes: 10, price: 350 } },
   });
 });
@@ -89,6 +88,10 @@ test("every page sets its own title", () => {
     }
   }
   assert.ok(titles.size >= 9, `only ${titles.size} titles found`);
+});
+
+test("no delivery price on the site (discussed with each customer on WhatsApp)", () => {
+  for (const file of SITE_FILES) assert.doesNotMatch(readFileSync(file, "utf8"), /livraison|delivery|shipping/i, file);
 });
 
 test("visible copy never says Cardify", () => {

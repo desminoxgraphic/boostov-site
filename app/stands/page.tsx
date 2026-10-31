@@ -45,7 +45,7 @@ export default function Stands() {
           <WaButton msg={o.msg} block>Commander le {o.name}</WaButton>
         </div>
       </article>)}</div>
-      <ul className="notes"><li className="note-item"><Check size={18} aria-hidden="true" />Personnalisation incluse. Livraison partout au Maroc : +{PRICING.delivery} DH.</li></ul>
+      <ul className="notes"><li className="note-item"><Check size={18} aria-hidden="true" />Personnalisation incluse dans le prix.</li></ul>
     </Section>
   </>;
 }

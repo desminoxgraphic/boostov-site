@@ -1,7 +1,6 @@
 // JSON-LD builders. Only true data: names, prices and contact come from the same sources as the visible copy.
 import { INSTAGRAM_URL, PHONE_E164 } from "@/lib/contact";
 import { SITE_URL } from "@/lib/site";
-import { PRICING } from "@/src/config/pricing";
 
 const ORG_ID = `${SITE_URL}/#organization`;
 
@@ -17,11 +16,6 @@ export const organization = {
   contactPoint: [{ "@type": "ContactPoint", telephone: PHONE_E164, contactType: "sales", areaServed: "MA", availableLanguage: ["fr", "ar"], contactOption: "WhatsApp" }],
 };
 
-const shipping = {
-  "@type": "OfferShippingDetails",
-  shippingRate: { "@type": "MonetaryAmount", value: PRICING.delivery, currency: "MAD" },
-  shippingDestination: { "@type": "DefinedRegion", addressCountry: "MA" },
-};
 
 export function product(name: string, description: string, image: string, offers: { name: string; price: number }[]) {
   return {
@@ -31,7 +25,7 @@ export function product(name: string, description: string, image: string, offers
     description,
     image: `${SITE_URL}${image}`,
     brand: { "@type": "Brand", name: "Boostov" },
-    offers: offers.map((o) => ({ "@type": "Offer", name: o.name, price: o.price, priceCurrency: "MAD", seller: { "@id": ORG_ID }, shippingDetails: shipping })),
+    offers: offers.map((o) => ({ "@type": "Offer", name: o.name, price: o.price, priceCurrency: "MAD", seller: { "@id": ORG_ID } })),
   };
 }
 

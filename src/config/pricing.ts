@@ -2,7 +2,6 @@
 export const PRICING = {
   connect: { carte: 200, stand: 250 },
   grow: { carte: 250, stand: 300 },
-  delivery: 40,
   kits: {
     kit5: { cartes: 5, price: 250 },
     kit10: { cartes: 10, price: 350 },

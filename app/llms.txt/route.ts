@@ -7,7 +7,7 @@ import { POSTS } from "@/content/blog.fr";
 export const dynamic = "force-static";
 
 export function GET() {
-  const { connect, grow, delivery, kits } = PRICING;
+  const { connect, grow, kits } = PRICING;
   const body = `# Boostov
 
 > Boostov (boostov.ma) vend des cartes et des stands NFC personnalisés, avec QR code de secours, pour les commerces au Maroc. Basé à Agadir. Commande uniquement sur WhatsApp.
@@ -16,7 +16,6 @@ export function GET() {
 - Boostov Connect : carte de visite digitale. Un tap NFC ou un scan du QR code ouvre la page du commerce (appel, WhatsApp, Instagram, itinéraire, enregistrer le contact). Carte ${connect.carte} DH, stand ${connect.stand} DH.
 - Boostov Grow : après l'achat, le client tape et suit un parcours avis Google (optionnel), partage et récompense pour sa prochaine visite. La récompense n'est jamais liée à la publication d'un avis. Carte ${grow.carte} DH, stand ${grow.stand} DH.
 - Personnalisation incluse : logo, nom, couleurs, QR code, texte.
-- Livraison partout au Maroc : +${delivery} DH par commande.
 - Sans application : la page s'ouvre dans le navigateur du téléphone.
 
 ## Revendeurs (18 ans et plus)

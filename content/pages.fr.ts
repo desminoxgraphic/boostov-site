@@ -2,11 +2,11 @@
 // prices only from src/config/pricing.ts, unconfirmed facts omitted (see content/TODO.md).
 import { PRICING } from "@/src/config/pricing";
 
-const { connect, grow, delivery, kits } = PRICING;
+const { connect, grow, kits } = PRICING;
 
 export const produits = {
   title: "Carte NFC Connect ou Grow : comparatif et prix | Boostov",
-  description: `Comparez Boostov Connect (carte de visite digitale, dès ${connect.carte} DH) et Boostov Grow (avis Google et fidélisation client, dès ${grow.carte} DH). Carte ou stand, livraison +${delivery} DH au Maroc.`,
+  description: `Comparez Boostov Connect (carte de visite digitale, dès ${connect.carte} DH) et Boostov Grow (avis Google et fidélisation client, dès ${grow.carte} DH). Carte ou stand, commande sur WhatsApp.`,
   eyebrow: "Produits",
   h1: "Connect ou Grow : quelle carte NFC pour votre commerce ?",
   lead: "Choisissez Connect pour que vos clients vous contactent, Grow pour obtenir des avis Google et les faire revenir. Les deux existent en carte et en stand de comptoir.",
@@ -47,7 +47,6 @@ export const produits = {
     ],
   },
   notes: [
-    `Livraison partout au Maroc : +${delivery} DH sur chaque commande.`,
     "La personnalisation est incluse dans le prix.",
     "La récompense Grow n’est jamais conditionnée à la publication d’un avis.",
   ],
@@ -87,7 +86,7 @@ export const stands = {
 
 export const revendeurs = {
   title: "Devenir revendeur NFC au Maroc : kits Boostov | Boostov",
-  description: `Kits revendeur Boostov : Kit 5 à ${kits.kit5.price} DH, Kit 10 à ${kits.kit10.price} DH (+${delivery} DH de livraison). Cartes NFC, accès au système et formation. Réservé aux 18 ans et plus.`,
+  description: `Kits revendeur Boostov : Kit 5 à ${kits.kit5.price} DH, Kit 10 à ${kits.kit10.price} DH : cartes NFC, accès au système et formation. Réservé aux 18 ans et plus.`,
   eyebrow: "Revendeurs",
   h1: "Devenir revendeur NFC Boostov.",
   lead: `Deux kits pour proposer Boostov aux commerces de votre ville : Kit 5 à ${kits.kit5.price} DH ou Kit 10 à ${kits.kit10.price} DH.`,
@@ -109,7 +108,7 @@ export const revendeurs = {
     title: "Comment ça marche",
     steps: [
       ["Précommandez sur WhatsApp", "Choisissez le Kit 5 ou le Kit 10."],
-      ["Recevez votre kit", `Livraison partout au Maroc, +${delivery} DH.`],
+      ["Recevez votre kit", "Avec vos cartes NFC Boostov."],
       ["Suivez la formation", "Et recevez votre accès au système."],
       ["Proposez Boostov", "Aux commerces de votre ville."],
     ] as [string, string][],
@@ -123,18 +122,17 @@ export const revendeurs = {
 };
 
 export const faqPage = {
-  title: "FAQ cartes et stands NFC : livraison, NFC ou QR, commande | Boostov",
-  description: "Réponses courtes sur les cartes et stands NFC Boostov : prix, livraison au Maroc, NFC ou QR code, personnalisation, avis Google et programme revendeur.",
+  title: "FAQ cartes et stands NFC : prix, NFC ou QR, commande | Boostov",
+  description: "Réponses courtes sur les cartes et stands NFC Boostov : prix, commande, NFC ou QR code, personnalisation, avis Google et programme revendeur.",
   eyebrow: "FAQ",
   h1: "Questions fréquentes sur les cartes et stands NFC.",
   lead: "Des réponses courtes et honnêtes. Une autre question ? Écrivez-nous sur WhatsApp.",
   groups: [
     {
-      id: "commande", title: "Commande, prix et livraison",
+      id: "commande", title: "Commande et prix",
       items: [
-        ["Comment commander ?", "Sur WhatsApp uniquement. Touchez un bouton « Commander » : le message nomme déjà le produit, puis nous confirmons avec vous le design, le paiement et la livraison."],
+        ["Comment commander ?", "Sur WhatsApp uniquement. Touchez un bouton « Commander » : le message nomme déjà le produit, puis nous confirmons avec vous le design et le paiement."],
         ["Combien coûtent les produits ?", `Connect : carte ${connect.carte} DH, stand ${connect.stand} DH. Grow : carte ${grow.carte} DH, stand ${grow.stand} DH. La personnalisation est incluse.`],
-        ["Combien coûte la livraison ?", `${delivery} DH sur chaque commande, partout au Maroc.`],
       ],
     },
     {

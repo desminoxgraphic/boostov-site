@@ -3,7 +3,7 @@
 // Unknown facts are omitted; see content/TODO.md.
 import { PRICING } from "@/src/config/pricing";
 
-const { connect, grow, delivery, kits } = PRICING;
+const { connect, grow, kits } = PRICING;
 const minPrice = Math.min(connect.carte, connect.stand, grow.carte, grow.stand);
 
 export const fr = {
@@ -18,7 +18,6 @@ export const fr = {
     example: "Exemple de personnalisation",
     from: "dès",
     dh: "DH",
-    delivery: `Livraison partout au Maroc : +${delivery} DH`,
   },
   home: {
     hero: {
@@ -62,7 +61,7 @@ export const fr = {
       items: [
         { title: "Choisissez et écrivez-nous", copy: "Connect ou Grow, carte ou stand.", action: "Vous : un message WhatsApp." },
         { title: "Envoyez votre logo, vos couleurs et vos liens", copy: "Nous préparons votre design et votre page.", action: "Vous : vos fichiers et liens." },
-        { title: "Recevez-le prêt à l’emploi", copy: `Livraison partout au Maroc (+${delivery} DH).`, action: "Vous : posez-le au comptoir." },
+        { title: "Recevez-le prêt à l’emploi", copy: "Votre carte ou votre stand arrive prêt à l’emploi.", action: "Vous : posez-le au comptoir." },
       ],
       cta: "Commencer sur WhatsApp",
     },
@@ -89,7 +88,6 @@ export const fr = {
       eyebrow: "FAQ",
       title: "Les questions qu’on nous pose.",
       items: [
-        ["Combien coûte la livraison ?", `${delivery} DH sur chaque commande, partout au Maroc.`],
         ["Faut-il une application ?", "Non. La page s’ouvre dans le navigateur du téléphone, d’un tap NFC ou d’un scan du QR code."],
         ["Et si le téléphone n’a pas le NFC ?", "Le QR code imprimé ouvre la même page. Le client le scanne avec l’appareil photo."],
         ["Comment commander ?", "Touchez un bouton WhatsApp : le message nomme déjà le produit. Nous confirmons ensuite les détails et le paiement avec vous."],
@@ -98,7 +96,7 @@ export const fr = {
     },
     final: {
       title: "Prêt à équiper votre comptoir ?",
-      lead: `Écrivez-nous sur WhatsApp. Cartes dès ${minPrice} DH, livraison +${delivery} DH partout au Maroc.`,
+      lead: `Écrivez-nous sur WhatsApp. Cartes et stands personnalisés dès ${minPrice} DH.`,
       cta: "Commander sur WhatsApp",
     },
   },

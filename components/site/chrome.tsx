@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Menu, Truck, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { INSTAGRAM_URL, PHONE_DISPLAY } from "@/lib/contact";
 import { fr } from "@/content/fr";
 import { NavLinks } from "@/components/site/nav-links";
@@ -36,7 +36,7 @@ export function SiteFooter() {
   return <footer className="footer">
     <div className="container">
       <div className="footer-grid">
-        <div className="footer-col"><Brand /><p>{f.tagline}</p><p className="footer-delivery"><Truck size={16} aria-hidden="true" />{fr.labels.delivery}</p></div>
+        <div className="footer-col"><Brand /><p>{f.tagline}</p></div>
         <div className="footer-col"><b>{f.site}</b><Link href="/produits">{fr.nav.produits}</Link><Link href="/revendeurs">{fr.nav.revendeurs}</Link><Link href="/stands">Stands</Link><Link href="/faq">{fr.nav.faq}</Link><Link href="/blog">Guides</Link></div>
         <div className="footer-col"><b>{f.contact}</b>
           <WaButton msg="info" variant="ghost-dark">WhatsApp {PHONE_DISPLAY}</WaButton>

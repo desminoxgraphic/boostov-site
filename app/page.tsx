@@ -62,7 +62,7 @@ export default function Home() {
           </div>
         </li>)}
       </ul>
-      <p className="shelf-foot"><span>{fr.labels.delivery}</span><Link className="link-arrow" href="/produits">{t.products.compare}<ArrowRight size={16} aria-hidden="true" /></Link></p>
+      <p className="shelf-foot"><Link className="link-arrow" href="/produits">{t.products.compare}<ArrowRight size={16} aria-hidden="true" /></Link></p>
     </Section>
 
     {/* 4. How it works */}
@@ -106,7 +106,7 @@ export default function Home() {
             <p><span>{t.kits.kit5}</span><strong>{PRICING.kits.kit5.price}<em>{fr.labels.dh}</em></strong></p>
             <p><span>{t.kits.kit10}</span><strong>{PRICING.kits.kit10.price}<em>{fr.labels.dh}</em></strong></p>
           </div>
-          <p className="small">{t.kits.adult} +{PRICING.delivery} DH de livraison.</p>
+          <p className="small">{t.kits.adult}</p>
           <div className="kits6-actions">
             <WaButton msg="reseller" size="lg">Précommander un kit</WaButton>
             <Button href="/revendeurs" variant="ghost-dark" size="lg">{t.kits.more}<ArrowRight size={18} aria-hidden="true" /></Button>

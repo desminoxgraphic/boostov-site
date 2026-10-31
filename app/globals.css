@@ -334,7 +334,6 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .final6 { padding-block: var(--s-9); background: radial-gradient(80% 120% at 50% 0%, rgba(40, 100, 240, .55), transparent 70%), var(--ink); color: var(--white); text-align: center; }
 .final6-inner { display: grid; justify-items: center; gap: var(--s-5); }
 .final6 .lead { color: var(--on-dark-muted); max-width: 560px; }
-.footer-delivery { display: flex; align-items: center; gap: var(--s-2); margin-top: var(--s-3); color: var(--on-dark); }
 .footer-legal { display: flex; gap: var(--s-4); }
 .footer-legal a { display: inline-flex; align-items: center; min-height: 44px; color: var(--on-dark); text-decoration: none; }
 .footer-legal a:hover { color: var(--white); }
