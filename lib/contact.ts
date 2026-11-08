@@ -1,19 +1,26 @@
 // Single source of truth for Boostov contact details and WhatsApp messages.
+// Relative .ts import so node --test can load this file directly.
+import { PRICING } from "../src/config/pricing.ts";
+
 export const PHONE_LOCAL = "0709272476";
 export const PHONE_E164 = "+212709272476";
 export const PHONE_DISPLAY = "07 09 27 24 76";
 export const INSTAGRAM_URL = "https://www.instagram.com/boostov.ma/";
 
+const { grow, pro, connect, kits } = PRICING;
+
+// Short, polite French. Every message names the product so the order is clear from the first line.
 export const MESSAGES = {
-  info: "Salam Boostov, bghit n3ref ktar 3la Connect w Grow.",
-  connectCarte: "Salam, bghit Carte Connect personnalisée",
-  connectStand: "Salam, bghit Stand Connect personnalisé",
-  growCarte: "Salam, bghit Carte Grow personnalisée",
-  growStand: "Salam, bghit Stand Grow personnalisé",
-  stand: "Salam, bghit Stand personnalisé (logo, couleurs, QR code)",
-  kit5: "Salam, bghit précommande Kit 5 revendeur",
-  kit10: "Salam, bghit précommande Kit 10 revendeur",
-  reseller: "Salam, bghit précommande kit revendeur (Kit 5 wla Kit 10)",
+  info: "Bonjour Boostov, je souhaite commander. Pouvez-vous me conseiller le bon produit ?",
+  grow: `Bonjour Boostov, je souhaite commander Boostov Grow v2 (stand fidélité, ${grow.stand} DH). Merci !`,
+  growBeta: "Bonjour Boostov, mon commerce souhaite participer à la Beta de Boostov Grow v2. Merci !",
+  pro: `Bonjour Boostov, je souhaite commander la carte Boostov Pro (${pro.carte} DH). Merci !`,
+  connect: `Bonjour Boostov, je souhaite commander Boostov Connect (carte ${connect.carte} DH ou stand ${connect.stand} DH). Merci !`,
+  connectCarte: `Bonjour Boostov, je souhaite commander la carte Boostov Connect (${connect.carte} DH). Merci !`,
+  connectStand: `Bonjour Boostov, je souhaite commander le stand Boostov Connect (${connect.stand} DH). Merci !`,
+  kit5: `Bonjour Boostov, je souhaite précommander le Kit 5 revendeur (${kits.kit5.price} DH). Merci !`,
+  kit10: `Bonjour Boostov, je souhaite précommander le Kit 10 revendeur (${kits.kit10.price} DH). Merci !`,
+  reseller: "Bonjour Boostov, je souhaite précommander un kit revendeur (Kit 5 ou Kit 10). Merci !",
 } as const;
 
 export type MessageKey = keyof typeof MESSAGES;

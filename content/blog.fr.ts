@@ -1,8 +1,9 @@
 // Blog guides. General, verifiable advice only: no statistics, no invented cases.
 // Google policy wording is paraphrased; readers are pointed to Google's own pages.
+import type { MessageKey } from "@/lib/contact";
 
 export type Block = { h2?: string; p?: string[]; ul?: string[]; ol?: string[]; tip?: string };
-export type Post = { slug: string; title: string; h1: string; description: string; answer: string; published: string; og: string; image: string; related: { label: string; href: string }; body: Block[] };
+export type Post = { slug: string; title: string; h1: string; description: string; answer: string; published: string; og: string; related: { label: string; href: string; msg: MessageKey }; body: Block[] };
 
 const GOOGLE_POLICY = "https://support.google.com/contributionpolicy/answer/7400114";
 
@@ -15,8 +16,7 @@ export const POSTS: Post[] = [
     answer: "Vous pouvez demander un avis à tous vos clients, mais jamais en échange d’une récompense, et jamais seulement à ceux qui sont satisfaits. Le client doit publier librement, depuis son propre téléphone.",
     published: "2026-10-31",
     og: "blog-avis",
-    image: "/products/grow-stand-avis-1080.webp",
-    related: { label: "Découvrir Boostov Grow", href: "/produits#grow" },
+    related: { label: "Découvrir Boostov Grow v2", href: "/grow", msg: "grow" },
     body: [
       { h2: "Ce que Google interdit", p: ["Les règles de Google sur le contenu des contributions (avis inclus) visent les avis qui ne reflètent pas une expérience réelle et libre. En pratique, trois choses posent problème :"], ul: [
         "Offrir une récompense en échange d’un avis : remise, cadeau, boisson offerte, participation à un tirage.",
@@ -36,7 +36,7 @@ export const POSTS: Post[] = [
         "Dites une phrase simple et neutre : « Si vous avez une minute, votre avis sur Google nous aide beaucoup. »",
         "Laissez le client publier depuis son téléphone, sans le regarder ni l’aider à écrire.",
       ] },
-      { h2: "Et les récompenses de fidélité ?", p: ["Une récompense de fidélité est possible si elle n’a aucun lien avec l’avis : le client la reçoit qu’il publie un avis ou non. C’est le principe de Boostov Grow, où l’avis Google reste toujours optionnel."], tip: "Règle à retenir : même demande pour tous, aucune contrepartie pour l’avis, le client publie depuis son propre téléphone." },
+      { h2: "Et les récompenses de fidélité ?", p: ["Une récompense de fidélité est possible si elle n’a aucun lien avec l’avis : le client la reçoit qu’il publie un avis ou non. C’est le principe de Boostov Grow v2 : le client gagne ses points à chaque visite, et l’avis Google reste toujours optionnel."], tip: "Règle à retenir : même demande pour tous, aucune contrepartie pour l’avis, le client publie depuis son propre téléphone." },
     ],
   },
   {
@@ -47,8 +47,7 @@ export const POSTS: Post[] = [
     answer: "Le NFC ouvre la page d’un simple tap, le QR code avec l’appareil photo. Le plus sûr pour un commerce est de combiner les deux : NFC pour la rapidité, QR code pour les téléphones sans NFC.",
     published: "2026-10-31",
     og: "blog-nfc-qr",
-    image: "/products/connect-stand-1080.webp",
-    related: { label: "Voir les cartes et stands", href: "/produits" },
+    related: { label: "Découvrir Boostov Connect", href: "/connect", msg: "connect" },
     body: [
       { h2: "Comment fonctionne chaque solution", ul: [
         "NFC : une petite puce dans la carte ou le stand. Le client approche son téléphone et un lien s’ouvre, sans application.",
@@ -67,7 +66,7 @@ export const POSTS: Post[] = [
         "Fonctionne avec l’appareil photo de la plupart des smartphones récents.",
         "Peut être imprimé partout : stand, ticket, vitrine, menu.",
       ] },
-      { h2: "Pourquoi combiner les deux", p: ["Au comptoir, vous ne choisissez pas le téléphone de vos clients. Avec le NFC et un QR code sur le même support, chaque client a une solution : le tap pour les plus rapides, le scan pour les autres. C’est le choix fait sur toutes les cartes et tous les stands Boostov."], tip: "Vérifiez toujours que le NFC et le QR code ouvrent bien la même page avant de poser le support au comptoir." },
+      { h2: "Pourquoi combiner les deux", p: ["Au comptoir, vous ne choisissez pas le téléphone de vos clients. Avec le NFC et un QR code sur le même support, chaque client a une solution : le tap pour les plus rapides, le scan pour les autres. C’est le choix fait sur les stands Boostov Grow v2 et sur les cartes et stands Boostov Connect."], tip: "Vérifiez toujours que le NFC et le QR code ouvrent bien la même page avant de poser le support au comptoir." },
     ],
   },
   {
@@ -78,8 +77,7 @@ export const POSTS: Post[] = [
     answer: "Depuis votre fiche d’établissement Google, utilisez « Demander des avis » pour copier votre lien. Le client qui l’ouvre arrive directement sur la fenêtre pour noter votre commerce.",
     published: "2026-10-31",
     og: "blog-lien-avis",
-    image: "/products/grow-stand-1080.webp",
-    related: { label: "Mettre votre lien sur un stand Grow", href: "/produits#grow" },
+    related: { label: "Découvrir Boostov Grow v2", href: "/grow", msg: "grow" },
     body: [
       { h2: "Avant de commencer", p: ["Il vous faut une fiche d’établissement Google (Google Business Profile) validée, et être connecté avec le compte Google qui la gère."] },
       { h2: "Méthode 1 : depuis votre fiche Google", ol: [
@@ -94,7 +92,7 @@ export const POSTS: Post[] = [
         "Ouvrez le lien obtenu pour vérifier qu’il affiche bien la fenêtre d’avis de votre commerce.",
       ] },
       { h2: "Où utiliser votre lien", ul: [
-        "Sur un stand ou une carte NFC avec QR code au comptoir.",
+        "Sur un stand NFC avec QR code au comptoir, comme Boostov Grow v2 où l’avis reste optionnel.",
         "Dans le message WhatsApp de remerciement après une commande.",
         "Sur votre ticket ou votre facture, sous forme de QR code.",
       ], tip: "Testez le lien sur un téléphone qui n’est pas connecté à votre compte : c’est ce que verront vos clients." },

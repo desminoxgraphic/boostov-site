@@ -14,61 +14,17 @@ export const IMAGES = {
     "alpha": true,
     "blur": "data:image/webp;base64,UklGRpYAAABXRUJQVlA4WAoAAAAQAAAACgAADwAAQUxQSCEAAAABL/Dz/4iIHQratpG8h8B2d/wJH4CI/sebmWkgIH4AChIAVlA4IE4AAADwAQCdASoLABAAA4BaJaQAAujUNeZ84GAA/vhRiNJw0BZ9rtbNcEEhJUnEBzuwdjtrSsW5uEV2PJbSSr8R7LbU3A2m7fayV6pmQzoQAAA="
   },
-  "connect-stand": {
-    "width": 1122,
-    "height": 1402,
+  "grow-v2-card": {
+    "width": 780,
+    "height": 1716,
     "widths": [
       320,
       480,
       640,
-      828,
-      1080,
-      1122
+      780
     ],
     "alpha": false,
-    "blur": "data:image/webp;base64,UklGRngAAABXRUJQVlA4IGwAAABQAgCdASoNABAAA4BaJQBOgMYY7X5zQ0KfHoAA/uUMFVjlieFUCY2alB1/K2o4Kqr3Z7xoG0ic0tjR62ybM+9EUJh+dmxShr07Y+8TxdJd4rQfVn5yZZO4h0Er1LeK3hy2BbWHOYBssTad8AA="
-  },
-  "grow-card": {
-    "width": 1186,
-    "height": 1675,
-    "widths": [
-      320,
-      480,
-      640,
-      828,
-      1080,
-      1186
-    ],
-    "alpha": true,
-    "blur": "data:image/webp;base64,UklGRpQAAABXRUJQVlA4WAoAAAAQAAAACgAADwAAQUxQSB0AAAABH/Dy/4iIhYG0bXIHNzFJ4/7tXEFE/+MajH3ANQBWUDggUAAAAPABAJ0BKgsAEAADgFolpAAC6MmKAIsoAAD++FGI0nPl1NPpZjTY/8+V0BcvQC8ArA848vdPdXjN5Xz9npJoaBA98eYNGVzm/K3icuYzZAAA"
-  },
-  "grow-stand-avis": {
-    "width": 1122,
-    "height": 1402,
-    "widths": [
-      320,
-      480,
-      640,
-      828,
-      1080,
-      1122
-    ],
-    "alpha": false,
-    "blur": "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAAAQAgCdASoNABAAA4BaJYwCdAEUox9ZMUdAAP7tCw81Mp4kWxTPrWgmSJcK5YBYKvUiAbRidd2k+Nb+5+7TB+ZCHcy23kBCqsY+P7tEe3v0+F1RzEAiKbm23MsIAn9iKovOt9440AAAAA=="
-  },
-  "grow-stand": {
-    "width": 1122,
-    "height": 1402,
-    "widths": [
-      320,
-      480,
-      640,
-      828,
-      1080,
-      1122
-    ],
-    "alpha": false,
-    "blur": "data:image/webp;base64,UklGRoIAAABXRUJQVlA4IHYAAAAwAgCdASoNABAAA4BaJYgCdAYvXi5/TIMfUAD+6a8D1r4MY1trXHuxo0CxkJO8xsOtUx13mSZxpQ8IohfGJtue4b3eqI+BwOh++D7WknsgqDHmUbfFwR/iUBPezA0sQvTXPdoz77cToe476MC9x/ryeHtLKAAA"
+    "blur": "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAADQAQCdASoHABAAA4BaJQBOgCHXS/ewgAD+7e4fpzGU10WKpQoxk3SKhP5JbnEjjpF/4DJak2qU9/N+5dg7ybJnlQwXAgAA"
   },
   "kit-cards": {
     "width": 500,

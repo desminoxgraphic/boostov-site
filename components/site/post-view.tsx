@@ -5,7 +5,8 @@ import { POSTS } from "@/content/blog.fr";
 import { pageMeta } from "@/lib/meta";
 import { article, breadcrumb } from "@/lib/schema";
 import { JsonLd } from "@/components/site/json-ld";
-import { Breadcrumbs, Button, Section, WaButton } from "@/components/site/ui";
+import { Cta } from "@/components/site/cta";
+import { Breadcrumbs } from "@/components/site/ui";
 
 export function postMeta(slug: string): Metadata {
   const post = POSTS.find((p) => p.slug === slug)!;
@@ -23,34 +24,34 @@ export function PostView({ slug }: { slug: string }) {
   const post = POSTS.find((p) => p.slug === slug)!;
   const others = POSTS.filter((p) => p.slug !== post.slug);
   return <>
-    <JsonLd data={[breadcrumb([["Guides", "/blog"], [post.h1, `/blog/${post.slug}`]]), article({ title: post.h1, description: post.description, slug: post.slug, published: post.published, image: post.image })]} />
-    <header className="page-head">
-      <div className="container">
+    <JsonLd data={[breadcrumb([["Guides", "/blog"], [post.h1, `/blog/${post.slug}`]]), article({ title: post.h1, description: post.description, slug: post.slug, published: post.published, image: `/og/${post.og}.jpg` })]} />
+    <Breadcrumbs items={[["Guides", "/blog"], [post.h1, `/blog/${post.slug}`]]} />
+    <header className="page-hero page-hero--post">
+      <div className="container prose-wrap">
         <span className="eyebrow rise">Guide</span>
-        <h1 className="display post-title rise rise-2">{post.h1}</h1>
-        <p className="post-meta rise rise-3">Par Boostov · <time dateTime={post.published}>{date(post.published)}</time></p>
+        <h1 className="rise rise-2">{post.h1}</h1>
+        <p className="small rise rise-3 mt-4">Par Boostov · <time dateTime={post.published}>{date(post.published)}</time></p>
       </div>
     </header>
-    <Breadcrumbs items={[["Guides", "/blog"], [post.h1, `/blog/${post.slug}`]]} />
-    <Section>
+    <section className="section section--flush-top"><div className="container prose-wrap">
       <article className="prose">
         <p className="answer">{post.answer}</p>
-        {post.body.map((b, i) => <div key={i} className="prose-block">
+        {post.body.map((b, i) => <div key={i}>
           {b.h2 && <h2>{b.h2}</h2>}
           {b.p?.map((t) => <p key={t}>{linkify(t)}</p>)}
           {b.ul && <ul>{b.ul.map((t) => <li key={t}>{t}</li>)}</ul>}
           {b.ol && <ol>{b.ol.map((t) => <li key={t}>{linkify(t)}</li>)}</ol>}
           {b.tip && <p className="tip"><Lightbulb size={18} aria-hidden="true" />{b.tip}</p>}
         </div>)}
-        <div className="post-cta">
-          <Button href={post.related.href} variant="primary">{post.related.label}<ArrowRight size={16} aria-hidden="true" /></Button>
-          <WaButton msg="info" variant="ghost">Une question ? WhatsApp</WaButton>
-        </div>
       </article>
-    </Section>
-    <Section tone="tint">
-      <h2 className="h3">À lire aussi</h2>
-      <ul className="grid-2 mt-5">{others.map((p) => <li key={p.slug}><Link className="post-card" href={`/blog/${p.slug}`}><b>{p.h1}</b><span className="link-arrow">Lire<ArrowRight size={16} aria-hidden="true" /></span></Link></li>)}</ul>
-    </Section>
+      <div className="post-cta">
+        <Link className="link" href={post.related.href}>{post.related.label}<ArrowRight size={16} aria-hidden="true" /></Link>
+        <Cta msg={post.related.msg} />
+      </div>
+    </div></section>
+    <section className="section section--flush-top" aria-labelledby="more-title"><div className="container prose-wrap">
+      <h2 id="more-title" className="h3">À lire aussi</h2>
+      <ul className="posts posts--2 mt-5">{others.map((p) => <li key={p.slug}><Link className="post-card" href={`/blog/${p.slug}`}><span className="h3 post-card-title">{p.h1}</span><span className="link">Lire<ArrowRight size={16} aria-hidden="true" /></span></Link></li>)}</ul>
+    </div></section>
   </>;
 }

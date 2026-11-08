@@ -1,41 +1,35 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { Plus } from "lucide-react";
+import { ArrowRight, Plus } from "lucide-react";
 import { faqPage as t } from "@/content/pages.fr";
 import { POSTS } from "@/content/blog.fr";
 import { pageMeta } from "@/lib/meta";
 import { breadcrumb, faq } from "@/lib/schema";
 import { JsonLd } from "@/components/site/json-ld";
-import { Breadcrumbs, Card, PageHead, Section, WaButton } from "@/components/site/ui";
+import { Breadcrumbs, PageHero } from "@/components/site/ui";
+import { FinalCta } from "@/components/site/sections";
+import { fr } from "@/content/fr";
 
 export const metadata: Metadata = pageMeta({ title: t.title, description: t.description, path: "/faq", og: "faq" });
 
 export default function FaqPage() {
   return <>
     <JsonLd data={[breadcrumb([["FAQ", "/faq"]]), faq(t.groups.flatMap((g) => g.items))]} />
-    <PageHead eyebrow={t.eyebrow} title={t.h1} intro={t.lead} />
     <Breadcrumbs items={[["FAQ", "/faq"]]} />
-    <Section>
-      <div className="faq-layout">
-        <aside className="faq-aside">
-          <nav className="faq-toc" aria-label="Thèmes">{t.groups.map((g) => <a key={g.id} href={`#${g.id}`}>{g.title}</a>)}</nav>
-          <Card raised>
-            <h2 className="h3">Une autre question&nbsp;?</h2>
-            <p className="small">Écrivez-nous, on vous répond sur WhatsApp.</p>
-            <WaButton msg="info" block>Écrire sur WhatsApp</WaButton>
-          </Card>
-        </aside>
-        <div>
-          {t.groups.map((g) => <section key={g.id} id={g.id} className="faq-group">
-            <h2>{g.title}</h2>
-            {g.items.map(([q, a]) => <details key={q} className="qa"><summary>{q}<Plus aria-hidden="true" /></summary><p>{a}</p></details>)}
-          </section>)}
-          <div className="faq-guides">
-            <h2>Guides</h2>
-            <ul>{POSTS.map((p) => <li key={p.slug}><Link href={`/blog/${p.slug}`}>{p.h1}</Link></li>)}</ul>
-          </div>
-        </div>
+    <PageHero eyebrow={t.eyebrow} title={t.h1} lead={t.lead} msg="info" />
+    <section className="section section--flush-top"><div className="container faq-page">
+      <nav className="faq-toc" aria-label="Thèmes">{t.groups.map((g) => <a key={g.id} href={`#${g.id}`}>{g.title}</a>)}</nav>
+      <div className="faq-groups">
+        {t.groups.map((g) => <section key={g.id} id={g.id} className="faq faq-group" aria-labelledby={`${g.id}-title`}>
+          <h2 id={`${g.id}-title`} className="h3">{g.title}</h2>
+          {g.items.map(([q, a]) => <details key={q}><summary>{q}<Plus size={22} aria-hidden="true" /></summary><p>{a}</p></details>)}
+        </section>)}
+        <section className="faq-group" aria-labelledby="guides-title">
+          <h2 id="guides-title" className="h3">{t.guides}</h2>
+          <ul className="guide-links">{POSTS.map((p) => <li key={p.slug}><Link className="link" href={`/blog/${p.slug}`}>{p.h1}<ArrowRight size={16} aria-hidden="true" /></Link></li>)}</ul>
+        </section>
       </div>
-    </Section>
+    </div></section>
+    <FinalCta title={fr.home.final.title} text={fr.home.final.text} />
   </>;
 }

@@ -1,102 +1,87 @@
-// French copy for /produits, /stands, /revendeurs and /faq. Same rules as content/fr.ts:
-// prices only from src/config/pricing.ts, unconfirmed facts omitted (see content/TODO.md).
+// French copy for /pro, /connect, /revendeurs, /faq and /blog. Same rules as content/fr.ts:
+// prices only from src/config/pricing.ts, unconfirmed facts omitted (see content/TODO.md),
+// no hosting duration or renewal terms (undecided).
 import { PRICING } from "@/src/config/pricing";
 
-const { connect, grow, kits } = PRICING;
+const { grow, pro, connect, kits } = PRICING;
 
-export const produits = {
-  title: "Carte NFC Connect ou Grow : comparatif et prix | Boostov",
-  description: `Comparez Boostov Connect (carte de visite digitale, dès ${connect.carte} DH) et Boostov Grow (avis Google et fidélisation client, dès ${grow.carte} DH). Carte ou stand, commande sur WhatsApp.`,
-  eyebrow: "Produits",
-  h1: "Connect ou Grow : quelle carte NFC pour votre commerce ?",
-  lead: "Choisissez Connect pour que vos clients vous contactent, Grow pour obtenir des avis Google et les faire revenir. Les deux existent en carte et en stand de comptoir.",
-  products: [
-    {
-      id: "connect", name: "Boostov Connect", accent: "connect",
-      oneLine: "La carte de visite digitale de votre commerce.",
-      does: "Un tap ou un scan ouvre la page de votre commerce : appel, WhatsApp, Instagram, itinéraire et « Enregistrer le contact ».",
-      forWho: "Pour tout commerce qui veut être contacté et retrouvé facilement.",
-      card: { image: "connect-card", alt: "Carte NFC Boostov Connect personnalisée (exemple de personnalisation)", label: "Exemple de personnalisation", price: connect.carte, msg: "connectCarte" },
-      stand: { image: "connect-stand", alt: "Stand NFC Boostov Connect « Contactez-nous » sur un comptoir (visuel de démonstration)", label: "Visuel de démonstration", price: connect.stand, msg: "connectStand" },
-    },
-    {
-      id: "grow", name: "Boostov Grow", accent: "grow",
-      oneLine: "Avis Google, partage et fidélité après l’achat.",
-      does: "Après l’achat, le client tape et suit un parcours simple : avis Google (toujours optionnel), partage avec ses proches, récompense pour sa prochaine visite.",
-      forWho: "Pour les commerces qui veulent plus d’avis Google et des clients qui reviennent.",
-      card: { image: "grow-card", alt: "Carte NFC Boostov Grow personnalisée (exemple de personnalisation)", label: "Exemple de personnalisation", price: grow.carte, msg: "growCarte" },
-      stand: { image: "grow-stand", alt: "Stand NFC Boostov Grow « programme fidélité » sur un comptoir (visuel de démonstration)", label: "Visuel de démonstration", price: grow.stand, msg: "growStand" },
-    },
-  ],
-  table: {
-    caption: "Comparatif Boostov Connect et Boostov Grow",
-    cols: ["", "Connect", "Grow"],
-    rows: [
-      ["À quoi ça sert", "Être contacté et retrouvé", "Avis Google et clients qui reviennent"],
-      ["Ce qui s’ouvre après le tap", "La page de votre commerce", "Un parcours avis, partage, récompense"],
-      ["Appel, WhatsApp, Instagram, itinéraire", "✓", "—"],
-      ["« Enregistrer le contact »", "✓", "—"],
-      ["Lien vers votre page d’avis Google", "—", "✓ (optionnel pour le client)"],
-      ["Partage avec les proches", "—", "✓"],
-      ["Récompense pour la prochaine visite", "—", "✓"],
-      ["NFC + QR code de secours", "✓", "✓"],
-      ["Sans application", "✓", "✓"],
-      ["Personnalisé (logo, couleurs, texte)", "✓", "✓"],
-      ["Prix carte", `${connect.carte} DH`, `${grow.carte} DH`],
-      ["Prix stand", `${connect.stand} DH`, `${grow.stand} DH`],
+export const proPage = {
+  title: `Boostov Pro · Carte NFC pour freelances et pros, ${pro.carte} DH | Boostov`,
+  description: `Boostov Pro : une carte NFC pour freelances et professionnels au Maroc, avec votre page personnelle (contact, WhatsApp, liens, services). ${pro.carte} DH, paiement unique.`,
+  crumb: "Boostov Pro",
+  eyebrow: "Boostov Pro · Carte pro",
+  h1: "Votre carte pro. Votre page à vous.",
+  lead: "Un tap sur la carte ouvre votre page : qui vous êtes, ce que vous faites, et comment vous joindre.",
+  phone: { name: "Votre nom", job: "Votre métier", rows: ["WhatsApp", "Enregistrer le contact", "Mes services", "Instagram"], alt: "Écran de téléphone : page personnelle Boostov Pro." },
+  included: {
+    eyebrow: "Sur votre page",
+    title: "Tout ce qu’un client doit savoir.",
+    items: [
+      { icon: "contact", title: "Contact et WhatsApp", text: "On vous écrit ou on vous appelle en un geste." },
+      { icon: "save", title: "Enregistrer le contact", text: "Votre numéro entre dans son téléphone, sans le taper." },
+      { icon: "links", title: "Liens et réseaux", text: "Instagram, portfolio, site : vos liens au même endroit." },
+      { icon: "services", title: "Vos services", text: "Ce que vous proposez, présenté simplement." },
     ],
   },
-  notes: [
-    "La personnalisation est incluse dans le prix.",
-    "La récompense Grow n’est jamais conditionnée à la publication d’un avis.",
-  ],
-  related: "À lire aussi",
+  offer: { eyebrow: "Prix", title: "Une carte. Une page.", items: ["Carte NFC Boostov Pro", "Votre page personnelle", "Sans application pour vos clients"] },
+  faq: [
+    ["À qui s’adresse Boostov Pro ?", "Aux freelances et aux professionnels : consultants, artisans, coachs, créatifs, commerciaux… à toute personne qui donne sa carte de visite."],
+    ["Mon client doit-il installer une application ?", "Non. Il touche la carte avec son téléphone et votre page s’ouvre dans son navigateur."],
+    ["Comment commander ?", "Sur WhatsApp, en un clic. On prépare votre carte et votre page avec vous."],
+  ] as [string, string][],
+  final: "Votre prochaine carte de visite tient en un tap.",
 };
 
-export const stands = {
-  title: "Stand NFC personnalisé pour comptoir, avis Google et contact | Boostov",
-  description: `Stand NFC de comptoir personnalisé à votre logo et vos couleurs, avec QR code de secours. Connect ${connect.stand} DH, Grow ${grow.stand} DH. Commande sur WhatsApp.`,
-  eyebrow: "Stands",
-  h1: "Stand NFC personnalisé pour votre comptoir.",
-  lead: "Un stand posé là où vos clients paient : ils tapent avec leur téléphone ou scannent le QR code, et votre page s’ouvre.",
-  parts: [
-    ["Votre logo et votre nom", "En haut du stand, bien visibles."],
-    ["Vos couleurs", "Le fond et les accents reprennent votre identité."],
-    ["Un QR code", "Pour les téléphones sans NFC : le scan ouvre la même page."],
-    ["Une puce NFC", "Le client approche son téléphone, la page s’ouvre."],
-    ["Votre message", "« Contactez-nous » pour Connect, « Donnez votre avis » pour Grow, ou le texte de votre choix."],
-  ] as [string, string][],
-  preview: {
-    eyebrow: "Aperçu",
-    title: "Essayez votre stand.",
-    lead: "Choisissez une couleur, ajoutez votre logo et votre nom. L’aperçu reste sur votre téléphone : rien n’est envoyé ni enregistré.",
-    disclaimer: "Aperçu indicatif. Le design final est validé avec vous sur WhatsApp.",
-    product: "Produit",
-    color: "Couleur du fond",
-    name: "Nom du commerce",
-    namePlaceholder: "Votre commerce",
-    logo: "Votre logo (facultatif)",
-    logoHint: "Le fichier reste sur votre appareil.",
-    removeLogo: "Retirer le logo",
-    tap: "Touchez ou scannez",
-    cta: "Commander ce stand sur WhatsApp",
+export const connectPage = {
+  title: `Boostov Connect · Carte ou stand NFC pour commerces, dès ${connect.carte} DH | Boostov`,
+  description: `Boostov Connect : carte (${connect.carte} DH) ou stand (${connect.stand} DH) NFC et QR code qui ouvre la page de votre commerce : WhatsApp, Instagram, localisation, contact. Agadir, Maroc.`,
+  crumb: "Boostov Connect",
+  eyebrow: "Boostov Connect · Carte ou stand",
+  h1: "La page de votre commerce, en un tap.",
+  lead: "Le client touche la carte ou le stand, ou scanne le QR code : votre WhatsApp, votre Instagram et votre adresse s’ouvrent.",
+  photoAlt: "Carte Boostov Connect personnalisée au nom « Votre commerce ».",
+  formats: {
+    eyebrow: "Deux formats",
+    title: "Carte ou stand, à vous de choisir.",
+    carte: { name: "Carte Connect", text: "Dans la poche ou à côté de la caisse. Vous la tendez, le client tape." },
+    stand: { name: "Stand Connect", text: "Posé sur le comptoir. Le client tape quand il veut, sans vous déranger." },
   },
-  // TODO (content/TODO.md): size and material once confirmed from the real stand.
+  included: {
+    eyebrow: "Ce qui s’ouvre",
+    title: "Tout pour vous contacter et vous retrouver.",
+    items: [
+      { icon: "wa", title: "WhatsApp et appel", text: "Un geste pour vous écrire ou vous appeler." },
+      { icon: "insta", title: "Instagram", text: "Vos photos et nouveautés à portée de tap." },
+      { icon: "map", title: "Localisation", text: "L’itinéraire vers votre commerce sur Google Maps." },
+      { icon: "save", title: "Enregistrer le contact", text: "Votre commerce entre dans son répertoire." },
+      { icon: "qr", title: "NFC et QR code", text: "Pour tous les téléphones, même sans NFC." },
+      { icon: "brand", title: "Personnalisé", text: "Votre nom, votre logo et vos couleurs." },
+    ],
+  },
+  phone: { name: "Votre commerce", job: "Agadir", rows: ["WhatsApp", "Instagram", "Itinéraire", "Enregistrer le contact"], alt: "Écran de téléphone : page de commerce Boostov Connect." },
+  faq: [
+    ["Quelle différence avec Boostov Grow v2 ?", "Connect ouvre la page de contact de votre commerce. Grow v2 est un système de fidélité : points à chaque visite et récompense pour faire revenir le client."],
+    ["Et si le téléphone n’a pas le NFC ?", "Chaque carte et chaque stand Connect a un QR code : le scan avec l’appareil photo ouvre la même page."],
+    ["Comment commander ?", "Sur WhatsApp, en un clic. Dites-nous si vous voulez la carte ou le stand, et on prépare le design avec vous."],
+  ] as [string, string][],
+  final: "Vos clients vous retrouvent en un tap.",
 };
 
 export const revendeurs = {
   title: "Devenir revendeur NFC au Maroc : kits Boostov | Boostov",
   description: `Kits revendeur Boostov : Kit 5 à ${kits.kit5.price} DH, Kit 10 à ${kits.kit10.price} DH : cartes NFC, accès au système et formation. Réservé aux 18 ans et plus.`,
-  eyebrow: "Revendeurs",
+  crumb: "Revendeurs",
+  eyebrow: "Kits revendeurs",
   h1: "Devenir revendeur NFC Boostov.",
   lead: `Deux kits pour proposer Boostov aux commerces de votre ville : Kit 5 à ${kits.kit5.price} DH ou Kit 10 à ${kits.kit10.price} DH.`,
   adult: "Le programme revendeur est réservé aux personnes de 18 ans et plus.",
   launch: "Prix de lancement, 10 premiers kits",
   photoAlt: "Cartes NFC blanches empilées",
-  compareTitle: "Kit 5 ou Kit 10",
-  rows: ["Cartes NFC Boostov", "Accès au système", "Formation", "Commande"],
+  kitsTitle: "Kit 5 ou Kit 10.",
+  cards: "cartes NFC Boostov",
+  kitItems: ["Accès au système", "Formation incluse"],
   inside: {
-    title: "Ce qu’il y a dans le kit",
+    title: "Ce qu’il y a dans le kit.",
     items: [
       ["Cartes NFC Boostov", "5 ou 10 cartes selon le kit."],
       ["Accès au système", "Vous créez et gérez les pages de vos clients commerçants, et vous suivez leurs statistiques."],
@@ -105,7 +90,7 @@ export const revendeurs = {
     // TODO (content/TODO.md): card type, training details, client-shop limit once confirmed.
   },
   how: {
-    title: "Comment ça marche",
+    title: "Comment ça marche.",
     steps: [
       ["Précommandez sur WhatsApp", "Choisissez le Kit 5 ou le Kit 10."],
       ["Recevez votre kit", "Avec vos cartes NFC Boostov."],
@@ -118,43 +103,44 @@ export const revendeurs = {
     items: ["Vous connaissez des commerçants dans votre ville.", "Vous aimez le contact et le terrain.", "Vous voulez une activité que vous gérez vous-même."],
   },
   noPromise: "Nous ne promettons aucun revenu. Vos résultats dépendent de vos ventes.",
-  cta: "Précommander",
 };
 
 export const faqPage = {
-  title: "FAQ cartes et stands NFC : prix, NFC ou QR, commande | Boostov",
-  description: "Réponses courtes sur les cartes et stands NFC Boostov : prix, commande, NFC ou QR code, personnalisation, avis Google et programme revendeur.",
+  title: "FAQ Boostov : fidélité, cartes NFC, prix et commande | Boostov",
+  description: "Réponses courtes sur Boostov Grow v2, Boostov Pro et Boostov Connect : prix, installation, NFC ou QR code, avis Google, commande sur WhatsApp et kits revendeurs.",
   eyebrow: "FAQ",
-  h1: "Questions fréquentes sur les cartes et stands NFC.",
+  h1: "Questions fréquentes.",
   lead: "Des réponses courtes et honnêtes. Une autre question ? Écrivez-nous sur WhatsApp.",
+  guides: "Guides",
   groups: [
     {
       id: "commande", title: "Commande et prix",
       items: [
-        ["Comment commander ?", "Sur WhatsApp uniquement. Touchez un bouton « Commander » : le message nomme déjà le produit, puis nous confirmons avec vous le design et le paiement."],
-        ["Combien coûtent les produits ?", `Connect : carte ${connect.carte} DH, stand ${connect.stand} DH. Grow : carte ${grow.carte} DH, stand ${grow.stand} DH. La personnalisation est incluse.`],
+        ["Comment commander ?", "Sur WhatsApp uniquement. Touchez « Commander sur WhatsApp » : le message nomme déjà le produit, puis nous confirmons avec vous le design et le paiement."],
+        ["Combien coûtent les produits ?", `Boostov Grow v2 : stand ${grow.stand} DH, installation incluse. Boostov Pro : carte ${pro.carte} DH. Boostov Connect : carte ${connect.carte} DH ou stand ${connect.stand} DH. Paiement unique.`],
+        ["Est-ce que je peux tester avant ?", "Boostov Grow v2 est en Beta : nous cherchons 3 commerces testeurs. Écrivez-nous sur WhatsApp si votre commerce est intéressé."],
       ],
     },
     {
-      id: "produits", title: "Produits et technologie",
+      id: "produits", title: "Les produits",
       items: [
-        ["Quelle différence entre Connect et Grow ?", "Connect ouvre la page de contact de votre commerce. Grow ouvre un parcours avis Google, partage et récompense pour faire revenir le client."],
+        ["Quelle différence entre Grow v2, Pro et Connect ?", "Grow v2 est un stand de fidélité : le client gagne des points à chaque visite et revient pour sa récompense. Pro est une carte pour freelances et professionnels avec une page personnelle. Connect ouvre la page de contact d’un commerce, en carte ou en stand."],
+        ["Qui choisit la récompense Grow ?", "Vous. Vous décidez ce que le client gagne, et le compteur repart à zéro une fois la récompense utilisée."],
+        ["Qui installe le stand Grow v2 ?", "Nous. L’installation est incluse dans le prix."],
+        ["Que deviennent les contacts de mes clients ?", "Ils restent à vous : avec Grow v2, vous pouvez exporter la liste de vos clients."],
+      ],
+    },
+    {
+      id: "technologie", title: "NFC et QR code",
+      items: [
         ["Faut-il une application ?", "Non. La page s’ouvre dans le navigateur du téléphone du client."],
-        ["Et si le téléphone n’a pas le NFC ?", "Chaque carte et chaque stand a un QR code : le scan avec l’appareil photo ouvre la même page."],
-        ["Puis-je modifier ma page après la commande ?", "Oui. Vos informations et liens peuvent changer sans remplacer la carte ou le stand."],
-      ],
-    },
-    {
-      id: "personnalisation", title: "Personnalisation",
-      items: [
-        ["Que comprend la personnalisation ?", "Votre logo, votre nom, vos couleurs, un QR code et le texte de votre choix. Nous définissons le design avec vous sur WhatsApp."],
-        ["Que dois-je envoyer ?", "Votre logo, vos couleurs et vos liens (WhatsApp, Instagram, Google Maps, page d’avis Google selon le produit)."],
+        ["Et si le téléphone n’a pas le NFC ?", "Les stands Grow v2 et les cartes et stands Connect ont aussi un QR code : le scan avec l’appareil photo ouvre la même page."],
       ],
     },
     {
       id: "avis", title: "Avis Google",
       items: [
-        ["Grow respecte-t-il les règles de Google ?", "Grow propose l’avis sans l’imposer : la récompense n’est jamais liée à la publication d’un avis, et chaque client donne son avis librement depuis son propre téléphone."],
+        ["L’avis Google est-il obligatoire ?", "Non, il est optionnel. La récompense n’est jamais liée à la publication d’un avis, et chaque client donne son avis librement depuis son propre téléphone."],
       ],
     },
     {
@@ -165,4 +151,13 @@ export const faqPage = {
       ],
     },
   ] as { id: string; title: string; items: [string, string][] }[],
+};
+
+export const blogPage = {
+  title: "Guides fidélité client, avis Google et NFC pour commerces | Boostov",
+  description: "Guides pratiques pour les commerces au Maroc : demander des avis Google dans les règles, choisir entre NFC et QR code, créer son lien d’avis Google.",
+  eyebrow: "Guides",
+  h1: "Guides pour les commerces.",
+  lead: "Des guides courts et pratiques sur la fidélité, les avis Google, le NFC et le QR code.",
+  read: "Lire le guide",
 };

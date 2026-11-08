@@ -7,16 +7,16 @@ import { POSTS } from "@/content/blog.fr";
 export const dynamic = "force-static";
 
 export function GET() {
-  const { connect, grow, kits } = PRICING;
+  const { grow, pro, connect, kits } = PRICING;
   const body = `# Boostov
 
-> Boostov (boostov.ma) vend des cartes et des stands NFC personnalisés, avec QR code de secours, pour les commerces au Maroc. Basé à Agadir. Commande uniquement sur WhatsApp.
+> Boostov (boostov.ma), basé à Agadir au Maroc : « la tech qui fait grandir votre business ». Fidélité client et cartes NFC + QR code pour les commerces et les professionnels. Commande uniquement sur WhatsApp. Paiement unique.
 
 ## Produits et prix (MAD)
-- Boostov Connect : carte de visite digitale. Un tap NFC ou un scan du QR code ouvre la page du commerce (appel, WhatsApp, Instagram, itinéraire, enregistrer le contact). Carte ${connect.carte} DH, stand ${connect.stand} DH.
-- Boostov Grow : après l'achat, le client tape et suit un parcours avis Google (optionnel), partage et récompense pour sa prochaine visite. La récompense n'est jamais liée à la publication d'un avis. Carte ${grow.carte} DH, stand ${grow.stand} DH.
-- Personnalisation incluse : logo, nom, couleurs, QR code, texte.
-- Sans application : la page s'ouvre dans le navigateur du téléphone.
+- Boostov Grow v2 : stand de fidélité pour commerces. Le client touche le stand (NFC) ou scanne le QR code, valide sa visite et gagne un point. Le commerçant choisit la récompense ; le compteur repart à zéro ensuite. Rappel WhatsApp, export des contacts, avis Google optionnel (jamais lié à la récompense). Stand ${grow.stand} DH, installation incluse. Actuellement en Beta : Boostov cherche 3 commerces testeurs.
+- Boostov Pro : carte NFC pour freelances et professionnels, avec une page personnelle (contact, WhatsApp, liens, services). Carte ${pro.carte} DH.
+- Boostov Connect : carte ou stand NFC + QR code qui ouvre la page du commerce (WhatsApp, appel, Instagram, localisation, enregistrer le contact). Carte ${connect.carte} DH, stand ${connect.stand} DH.
+- Sans application : les pages s'ouvrent dans le navigateur du téléphone.
 
 ## Revendeurs (18 ans et plus)
 - Kit 5 : ${kits.kit5.cartes} cartes NFC Boostov, accès au système, formation. ${kits.kit5.price} DH.
@@ -29,10 +29,12 @@ export function GET() {
 
 ## Pages
 - [Accueil](${SITE_URL}/)
-- [Produits et comparatif Connect / Grow](${SITE_URL}/produits)
-- [Stands personnalisés](${SITE_URL}/stands)
-- [Revendeurs](${SITE_URL}/revendeurs)
+- [Boostov Grow v2, stand de fidélité](${SITE_URL}/grow)
+- [Boostov Pro, carte pour professionnels](${SITE_URL}/pro)
+- [Boostov Connect, carte ou stand](${SITE_URL}/connect)
+- [Kits revendeurs](${SITE_URL}/revendeurs)
 - [FAQ](${SITE_URL}/faq)
+- [Guides](${SITE_URL}/blog)
 ${POSTS.map((p) => `- [${p.h1}](${SITE_URL}/blog/${p.slug})`).join("\n")}
 `;
   return new Response(body, { headers: { "content-type": "text/plain; charset=utf-8" } });

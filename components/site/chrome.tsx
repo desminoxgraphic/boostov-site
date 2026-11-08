@@ -1,14 +1,14 @@
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
-import { INSTAGRAM_URL, PHONE_DISPLAY } from "@/lib/contact";
+import { Menu, MessageCircle, X } from "lucide-react";
+import { INSTAGRAM_URL, MESSAGES, PHONE_DISPLAY, waHref } from "@/lib/contact";
 import { fr } from "@/content/fr";
 import { NavLinks } from "@/components/site/nav-links";
-import { WaButton } from "@/components/site/ui";
+import { CtaBar, PageCta } from "@/components/site/cta";
 
 function Brand() {
   return <Link href="/" className="brand" aria-label={fr.nav.home}>
-    {/* eslint-disable-next-line @next/next/no-img-element -- 32px logo; next/image would ship ~33 KB of JS for it. */}
-    <img src="/img/boostov-logo.webp" alt="" width={32} height={32} /><span>boostov<span>.ma</span></span></Link>;
+    {/* eslint-disable-next-line @next/next/no-img-element -- 32px logo; next/image would ship JS for it. */}
+    <img src="/img/boostov-logo.webp" alt="" width={32} height={32} /><span>boostov</span></Link>;
 }
 
 function InstagramIcon() {
@@ -21,7 +21,7 @@ export function SiteHeader() {
       <Brand />
       <nav className="nav" aria-label="Navigation principale"><NavLinks /></nav>
       <div className="header-actions">
-        <WaButton msg="info" className="btn--header">{fr.nav.whatsapp}</WaButton>
+        <PageCta size="sm" className="header-cta" />
         <details className="menu">
           <summary aria-label={fr.nav.menu}><Menu className="i-open" size={20} aria-hidden="true" /><X className="i-close" size={20} aria-hidden="true" /></summary>
           <nav className="menu-panel" aria-label="Menu mobile"><NavLinks mobile /></nav>
@@ -36,18 +36,21 @@ export function SiteFooter() {
   return <footer className="footer">
     <div className="container">
       <div className="footer-grid">
-        <div className="footer-col"><Brand /><p>{f.tagline}</p></div>
-        <div className="footer-col"><b>{f.site}</b><Link href="/produits">{fr.nav.produits}</Link><Link href="/revendeurs">{fr.nav.revendeurs}</Link><Link href="/stands">Stands</Link><Link href="/faq">{fr.nav.faq}</Link><Link href="/blog">Guides</Link></div>
+        <div className="footer-col"><Brand /><p>{f.tagline}</p><p>{f.place}</p></div>
+        <div className="footer-col"><b>{f.site}</b>
+          {fr.nav.items.slice(0, 3).map(([href, label]) => <Link key={href} href={href}>{label}</Link>)}
+          <Link href="/revendeurs">{f.resellers}</Link>
+          <Link href="/faq">FAQ</Link>
+          <Link href="/blog">Guides</Link>
+        </div>
         <div className="footer-col"><b>{f.contact}</b>
-          <WaButton msg="info" variant="ghost-dark">WhatsApp {PHONE_DISPLAY}</WaButton>
-          <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer"><InstagramIcon />Instagram {f.instagram}</a>
+          <a href={waHref(MESSAGES.info)} target="_blank" rel="noopener noreferrer"><MessageCircle size={18} aria-hidden="true" />WhatsApp {PHONE_DISPLAY}</a>
+          <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer"><InstagramIcon />{f.instagram}</a>
         </div>
       </div>
-      <div className="footer-bottom"><span>© {new Date().getFullYear()} Boostov · Agadir, Maroc</span><span className="footer-legal"><Link href="/mentions-legales">{f.legalNotice}</Link><Link href="/confidentialite">{f.privacy}</Link></span></div>
+      <div className="footer-bottom"><span>© {new Date().getFullYear()} Boostov · {f.place}</span><nav aria-label="Informations légales"><Link href="/mentions-legales">{f.legalNotice}</Link><Link href="/confidentialite">{f.privacy}</Link></nav></div>
     </div>
   </footer>;
 }
 
-export function StickyWa() {
-  return <div className="sticky-wa"><WaButton msg="info" block size="lg">{fr.home.hero.cta}</WaButton></div>;
-}
+export { CtaBar };

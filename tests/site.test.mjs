@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { PHONE_E164, PHONE_LOCAL, telHref, waHref, MESSAGES } from "../lib/contact.ts";
-import { PRICING } from "../src/config/pricing.ts";
+import { PRICING, PRO_DEMO_URL } from "../src/config/pricing.ts";
 
 const tracked = execFileSync("git", ["ls-files", "-co", "--exclude-standard"], { encoding: "utf8" })
   .split("\n")
@@ -11,8 +11,9 @@ const tracked = execFileSync("git", ["ls-files", "-co", "--exclude-standard"], {
 
 const SITE_FILES = tracked.filter((f) => /^(app|components\/site|lib|content)\/.*\.tsx?$/.test(f) && !f.startsWith("app/api"));
 
-test("site has the four pages", () => {
-  for (const page of ["app/page.tsx", "app/produits/page.tsx", "app/revendeurs/page.tsx", "app/faq/page.tsx"]) assert.ok(tracked.includes(page), page);
+test("site has the v7 pages", () => {
+  for (const page of ["app/page.tsx", "app/grow/page.tsx", "app/pro/page.tsx", "app/connect/page.tsx", "app/revendeurs/page.tsx", "app/faq/page.tsx", "app/blog/page.tsx"]) assert.ok(tracked.includes(page), page);
+  for (const old of ["app/produits/page.tsx", "app/stands/page.tsx"]) assert.ok(!tracked.includes(old), `${old} should be a redirect`);
 });
 
 test("no old Boostov phone numbers remain in any format", () => {
@@ -44,16 +45,26 @@ test("no hard-coded wa.me or tel: number outside lib/contact.ts", () => {
 
 test("prices match the brief", () => {
   assert.deepEqual(PRICING, {
+    grow: { stand: 499 },
+    pro: { carte: 300 },
     connect: { carte: 200, stand: 250 },
-    grow: { carte: 250, stand: 300 },
     kits: { kit5: { cartes: 5, price: 250 }, kit10: { cartes: 10, price: 350 } },
   });
+});
+
+test("Pro demo button only renders when PRO_DEMO_URL is set", () => {
+  assert.equal(typeof PRO_DEMO_URL, "string");
+  for (const file of ["app/pro/page.tsx", "components/site/sections.tsx"]) {
+    const text = readFileSync(file, "utf8");
+    assert.match(text, /PRO_DEMO_URL \?|PRO_DEMO_URL &&/, `${file} must guard the demo link`);
+    assert.doesNotMatch(text, /href="https?:\/\/[^"]*demo/i, `${file} hard-codes a demo URL`);
+  }
 });
 
 test("no old prices or the old pack remain in site copy", () => {
   for (const file of SITE_FILES) {
     const text = readFileSync(file, "utf8");
-    assert.doesNotMatch(text, /\b(349|429|649)\b|Grow \+ Connect|\bPack\b/, file);
+    assert.doesNotMatch(text, /\b(349|429|649)\b|Grow \+ Connect|\bPack\b|Grow v1|Grow Carte|Carte Grow|Stand Grow personnalisé|Deux produits, deux formats|Choufna|Visuel de démonstration/, file);
   }
 });
 
@@ -61,11 +72,21 @@ test("site copy never hard-codes a DH price outside the pricing config", () => {
   for (const file of SITE_FILES.filter((f) => f.endsWith(".tsx"))) assert.doesNotMatch(readFileSync(file, "utf8"), /\d+ ?DH/, file);
 });
 
-test("every product WhatsApp message names the product", () => {
-  assert.match(MESSAGES.connectStand, /Stand Connect personnalisé/);
-  for (const key of ["connectCarte", "connectStand", "growCarte", "growStand", "kit5", "kit10"]) {
-    assert.match(MESSAGES[key], /Connect|Grow|Kit/, key);
+test("every product WhatsApp message is French, polite and names the product", () => {
+  const names = { grow: /Boostov Grow v2/, growBeta: /Boostov Grow v2/, pro: /Boostov Pro/, connect: /Boostov Connect/, connectCarte: /carte Boostov Connect/, connectStand: /stand Boostov Connect/, kit5: /Kit 5/, kit10: /Kit 10/, reseller: /kit revendeur/ };
+  for (const [key, re] of Object.entries(names)) {
+    assert.match(MESSAGES[key], re, key);
+    assert.match(MESSAGES[key], /^Bonjour Boostov,/, key);
   }
+  assert.match(MESSAGES.grow, new RegExp(`${PRICING.grow.stand} DH`));
+});
+
+test("every CTA is the gold WhatsApp button (no other order button component)", () => {
+  for (const file of SITE_FILES.filter((f) => f.endsWith(".tsx"))) {
+    const text = readFileSync(file, "utf8");
+    assert.doesNotMatch(text, /WaButton|btn--wa/, file);
+  }
+  assert.match(readFileSync("content/fr.ts", "utf8"), /cta: "Commander sur WhatsApp"/);
 });
 
 test("public site never exposes the reseller system or a login", () => {
@@ -81,8 +102,8 @@ test("no leftover Illustration placeholders", () => {
 
 test("every page sets its own title", () => {
   const titles = new Set();
-  for (const file of ["content/fr.ts", "content/pages.fr.ts", "content/blog.fr.ts", "app/blog/page.tsx"]) {
-    for (const m of readFileSync(file, "utf8").matchAll(/[tT]itle: "([^"]+\| Boostov)"/g)) {
+  for (const file of ["content/fr.ts", "content/pages.fr.ts", "content/blog.fr.ts"]) {
+    for (const m of readFileSync(file, "utf8").matchAll(/[tT]itle: ["`]([^"`]+\| Boostov)["`]/g)) {
       assert.ok(!titles.has(m[1]), `duplicate title ${m[1]}`);
       titles.add(m[1]);
     }
