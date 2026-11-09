@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default function Confidentialite() {
   return <>
     <PageHero eyebrow="Informations · à valider" title="Confidentialité" lead="Ce site ne collecte pas vos données personnelles." />
-    <section className="section section--flush-top"><div className="container prose-wrap">
+    <section className="sec sec--light"><div className="container prose-wrap">
       <div className="prose">
         <h2>Pas de formulaire</h2>
         <p>Le site boostov.ma ne contient aucun formulaire et ne vous demande aucune information.</p>

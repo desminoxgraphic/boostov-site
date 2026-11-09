@@ -1,7 +1,7 @@
 // JSON-LD builders. Only true data: names, prices and contact come from the same sources as the visible copy.
 import { INSTAGRAM_URL, PHONE_E164 } from "@/lib/contact";
 import { SITE_URL } from "@/lib/site";
-import { PRICING } from "@/src/config/pricing";
+import { BETA_ACTIVE, BETA_PRICE, PRICING } from "@/src/config/pricing";
 
 const ORG_ID = `${SITE_URL}/#organization`;
 
@@ -35,9 +35,9 @@ export function product(name: string, description: string, image: string, offers
 export function products() {
   const { grow, pro, connect } = PRICING;
   return [
-    product("Boostov Grow v2", "Stand de fidélité NFC et QR code pour commerces : points à chaque visite, récompense choisie par le commerçant, rappel WhatsApp, avis Google optionnel. Installation incluse.", "/og/grow.jpg", [{ name: "Stand Grow v2", price: grow.stand }], "/grow"),
-    product("Boostov Pro", "Carte NFC pour freelances et professionnels avec une page personnelle : contact, liens et services.", "/og/pro.jpg", [{ name: "Carte Pro", price: pro.carte }], "/pro"),
-    product("Boostov Connect", "Carte ou stand NFC et QR code qui ouvre la page du commerce : WhatsApp, Instagram, localisation, contact.", "/og/connect.jpg", [{ name: "Carte Connect", price: connect.carte }, { name: "Stand Connect", price: connect.stand }], "/connect"),
+    product("Boostov Grow v2", "Stand de fidélité NFC et QR code pour commerces : une visite validée à chaque passage, récompense choisie par le commerçant, rappel WhatsApp, avis Google optionnel. Installation incluse.", "/products/render-stand-grow-1080.webp", [{ name: "Stand Grow v2", price: grow.stand }, ...(BETA_ACTIVE && BETA_PRICE ? [{ name: "Stand Grow v2, offre Beta testeurs", price: BETA_PRICE }] : [])], "/grow"),
+    product("Boostov Pro", "Carte NFC et QR code pour freelances et professionnels, avec une page pro : services, galerie, liens, demandes de devis.", "/products/render-card-pro-1080.webp", [{ name: "Carte Pro", price: pro.carte }], "/pro"),
+    product("Boostov Connect", "Carte ou stand NFC et QR code qui ouvre la page du commerce : WhatsApp, Instagram, localisation, contact.", "/products/render-connect-duo-1080.webp", [{ name: "Carte Connect", price: connect.carte }, { name: "Stand Connect", price: connect.stand }], "/connect"),
   ];
 }
 

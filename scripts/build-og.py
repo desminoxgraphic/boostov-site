@@ -11,7 +11,7 @@ OUT = ROOT / "public" / "og"
 OUT.mkdir(exist_ok=True)
 SRC = ROOT / "assets" / "products-src"
 LOGO = ROOT / "public" / "boostov-logo.png"
-DISPLAY = str(ROOT / "assets" / "fonts" / "bricolage-720.ttf")
+DISPLAY = str(ROOT / "assets" / "fonts" / "bricolage-800.ttf")
 BOLD = "C:/Windows/Fonts/segoeuib.ttf"
 REG = "C:/Windows/Fonts/segoeui.ttf"
 BG, BLUE, CYAN, NAVY, GOLD, WHITE, MUTED = (7, 9, 15), (0, 96, 248), (0, 180, 250), (12, 38, 88), (232, 181, 74), (242, 245, 250), (169, 179, 196)
@@ -25,16 +25,16 @@ kit5 = num(r"kit5:\s*\{[^}]*price:\s*(\d+)")
 
 # name: (title, subtitle, gold line, visual)
 PAGES = {
-    "home": ("La tech qui fait grandir votre business.", "Un tap. Vos clients reviennent.", None, "screen"),
-    "grow": ("Faites revenir vos clients, en un tap.", "Boostov Grow v2 · Stand fidélité", f"{grow} DH · Installation incluse", "screen"),
-    "pro": ("Votre carte pro. Votre page à vous.", "Boostov Pro · Carte NFC", f"{pro} DH", "procard"),
-    "connect": ("La page de votre commerce, en un tap.", "Boostov Connect · Carte ou stand", f"Dès {connect_carte} DH", "connect-card.png"),
+    "home": ("La tech qui fait grandir votre business.", "Un tap. Vos clients reviennent.", None, "render-phone-loyalty.png"),
+    "grow": ("Faites revenir vos clients, en un tap.", "Boostov Grow v2 · Stand fidélité", f"{grow} DH · Installation incluse", "render-stand-grow.png"),
+    "pro": ("Votre carte pro. Votre page à vous.", "Boostov Pro · Carte NFC", f"{pro} DH", "render-card-pro.png"),
+    "connect": ("La page de votre commerce, en un tap.", "Boostov Connect · Carte ou stand", f"Dès {connect_carte} DH", "render-connect-duo.png"),
     "revendeurs": ("Devenir revendeur NFC Boostov.", "Réservé aux 18 ans et plus.", f"Kits dès {kit5} DH", "kit-cards.jpg"),
-    "faq": ("Questions fréquentes.", "Fidélité, cartes NFC, prix, commande.", None, "screen"),
-    "blog": ("Guides pour les commerces.", "Fidélité, avis Google, NFC et QR code.", None, "screen"),
-    "blog-avis": ("Demander des avis Google dans les règles.", "Guide Boostov", None, "screen"),
-    "blog-nfc-qr": ("Carte NFC ou QR code ?", "Guide Boostov", None, "connect-card.png"),
-    "blog-lien-avis": ("Créer un lien d’avis Google.", "Guide Boostov", None, "screen"),
+    "faq": ("Questions fréquentes.", "Fidélité, cartes NFC, prix, commande.", None, "render-phone-loyalty.png"),
+    "blog": ("Guides pour les commerces.", "Fidélité, avis Google, NFC et QR code.", None, "render-stand-grow.png"),
+    "blog-avis": ("Demander des avis Google dans les règles.", "Guide Boostov", None, "render-stand-grow.png"),
+    "blog-nfc-qr": ("Carte NFC ou QR code ?", "Guide Boostov", None, "render-card-connect.png"),
+    "blog-lien-avis": ("Créer un lien d’avis Google.", "Guide Boostov", None, "render-phone-loyalty.png"),
 }
 
 
@@ -88,6 +88,12 @@ for name, (title, sub, gold, visual) in PAGES.items():
         cd.ellipse((330, 36, 384, 90), outline=GOLD, width=4)
         card = card.rotate(-8, expand=True, resample=Image.BICUBIC)
         im.paste(card, (720, 170), card)
+    elif visual.startswith("render-"):
+        # Transparent product render: fit inside 460x560, keep its alpha.
+        r = Image.open(SRC / visual).convert("RGBA")
+        scale = min(460 / r.width, 560 / r.height)
+        r = r.resize((round(r.width * scale), round(r.height * scale)), Image.LANCZOS)
+        im.paste(r, (950 - r.width // 2, 330 - r.height // 2), r)
     else:
         p = Image.open(SRC / visual).convert("RGB")
         # Whole photo, never cropped (fit inside 400x480).

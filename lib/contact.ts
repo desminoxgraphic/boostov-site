@@ -13,7 +13,7 @@ const { grow, pro, connect, kits } = PRICING;
 export const MESSAGES = {
   info: "Bonjour Boostov, je souhaite commander. Pouvez-vous me conseiller le bon produit ?",
   grow: `Bonjour Boostov, je souhaite commander Boostov Grow v2 (stand fidélité, ${grow.stand} DH). Merci !`,
-  growBeta: "Bonjour Boostov, mon commerce souhaite participer à la Beta de Boostov Grow v2. Merci !",
+  growBeta: "Bonjour Boostov, mon commerce souhaite devenir testeur de la Beta Boostov Grow v2 (prix spécial testeurs). Merci !",
   pro: `Bonjour Boostov, je souhaite commander la carte Boostov Pro (${pro.carte} DH). Merci !`,
   connect: `Bonjour Boostov, je souhaite commander Boostov Connect (carte ${connect.carte} DH ou stand ${connect.stand} DH). Merci !`,
   connectCarte: `Bonjour Boostov, je souhaite commander la carte Boostov Connect (${connect.carte} DH). Merci !`,

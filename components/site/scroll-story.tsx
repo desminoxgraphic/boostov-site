@@ -2,57 +2,56 @@
 
 import { useEffect, useRef, useState } from "react";
 import { fr } from "@/content/fr";
-import { Phone, type PhoneState } from "@/components/site/phone";
+import { Phone, rewardLine } from "@/components/site/phone";
+import { frameAt, SLOTS, type Frame } from "@/lib/story";
 
 const STEPS = fr.story.steps;
 
+const label = (f: Frame) => `${fr.phone.alt} ${STEPS[f.step][0]} : ${f.count}/${SLOTS}, ${rewardLine(f.state, f.count)}.`;
+
 /**
- * Signature section: a sticky phone that plays the 4 loyalty steps as the visitor scrolls.
- * Renders in "live" mode (sticky stage, so no layout shift on hydration); invisible step triggers
- * watched by one IntersectionObserver set data-state. With prefers-reduced-motion it falls back
- * to a static row of 4 phones.
- * Only transform/opacity animate, the stage has a fixed size: no layout shift.
+ * Signature section. A sticky stage holds the phone; the frame is computed from the
+ * track's scroll position on each animation frame (no IntersectionObserver, so it also
+ * works in in-app browsers and capture tools). Only the phone's inner state changes:
+ * no layout shift. prefers-reduced-motion shows four static frames instead (CSS).
  */
-export function ScrollStory({ headingLevel = "h2" }: { headingLevel?: "h2" | "h3" }) {
-  const [live, setLive] = useState(true);
-  const [step, setStep] = useState(0);
-  const refs = useRef<(HTMLDivElement | null)[]>([]);
+export function ScrollStory() {
+  const track = useRef<HTMLDivElement>(null);
+  const [f, setF] = useState<Frame>({ step: 0, state: "tap", count: 0 });
 
   useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => setLive(!mq.matches && "IntersectionObserver" in window);
-    update();
-    mq.addEventListener("change", update);
-    return () => mq.removeEventListener("change", update);
+    const el = track.current;
+    if (!el) return;
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const r = el.getBoundingClientRect();
+      const stage = el.firstElementChild as HTMLElement | null;
+      const travel = r.height - (stage?.offsetHeight ?? innerHeight);
+      const next = frameAt(travel > 0 ? -r.top / travel : 0);
+      setF((cur) => (cur.step === next.step && cur.count === next.count ? cur : next));
+    };
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
+    raf = requestAnimationFrame(update);
+    addEventListener("scroll", onScroll, { passive: true });
+    addEventListener("resize", onScroll);
+    return () => { removeEventListener("scroll", onScroll); removeEventListener("resize", onScroll); cancelAnimationFrame(raf); };
   }, []);
 
-  useEffect(() => {
-    if (!live) return;
-    const io = new IntersectionObserver((entries) => {
-      for (const e of entries) if (e.isIntersecting) setStep(Number((e.target as HTMLElement).dataset.i));
-    }, { rootMargin: "-45% 0px -45% 0px" });
-    refs.current.forEach((el) => el && io.observe(el));
-    return () => io.disconnect();
-  }, [live]);
+  const statics: Frame[] = [{ step: 0, state: "tap", count: 0 }, { step: 1, state: "stamps", count: 4 }, { step: 2, state: "gift", count: SLOTS }, { step: 3, state: "loop", count: 0 }];
 
-  const H = headingLevel;
-  return <section className={`story${live ? " story--live" : ""}`} aria-labelledby="story-title">
-    <div className="story-head container">
-      <span className="eyebrow">{fr.story.eyebrow}</span>
-      <H id="story-title" className="h2">{fr.story.title}</H>
-    </div>
-    <div className="story-stage">
-      <div className="story-phone"><Phone state={String(step + 1) as PhoneState} label={`${fr.phone.alt} ${STEPS[step]}`} /></div>
-      <ol className="story-caps" aria-live="polite">
-        {STEPS.map((s, i) => <li key={s} className={`story-cap${i === step ? " is-active" : ""}`} aria-hidden={live && i !== step ? true : undefined}><span>{i + 1}</span>{s}</li>)}
-      </ol>
-      <div className="story-dots" aria-hidden="true">{STEPS.map((s, i) => <i key={s} className={i === step ? "is-active" : undefined} />)}</div>
-      <div className="story-static-phones">
-        {STEPS.map((s, i) => <figure key={s}><Phone state={String(i + 1) as PhoneState} label={`${fr.phone.alt} ${s}`} /><figcaption>{i + 1}. {s}</figcaption></figure>)}
+  return <>
+    <div className="story-track" ref={track}>
+      <div className="story-stage container">
+        <div className="story-phone"><Phone state={f.state} count={f.count} label={label(f)} /></div>
+        <ol className="story-steps" aria-live="polite">
+          {STEPS.map(([title, text], i) => <li key={title} className={`story-step${i === f.step ? " is-active" : ""}`}><span>{i + 1}</span>{title}<small>{text}</small></li>)}
+        </ol>
+        <div className="story-progress" aria-hidden="true">{STEPS.map(([t], i) => <i key={t} className={i === f.step ? "is-active" : undefined} />)}</div>
       </div>
     </div>
-    <div className="story-steps" aria-hidden="true">
-      {STEPS.map((s, i) => <div key={s} className="story-step" data-i={i} ref={(el) => { refs.current[i] = el; }} />)}
+    <div className="story-static container">
+      {statics.map((s) => <figure key={s.step}><Phone state={s.state} count={s.count} label={label(s)} /><figcaption>{s.step + 1}. {STEPS[s.step][0]}</figcaption></figure>)}
     </div>
-  </section>;
+  </>;
 }

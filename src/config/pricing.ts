@@ -12,5 +12,12 @@ export const PRICING = {
 // Shows "Prix de lancement, 10 premiers kits" on the reseller kits.
 export const LAUNCH_PRICE_ACTIVE = true;
 
+// Beta: 3 test shops get a special Grow v2 price in exchange for feedback and permission to show their results.
+// The normal Grow v2 price above stays the regular offer. Leave BETA_PRICE null to show
+// "Prix spécial pour les 3 testeurs, sur demande WhatsApp" (never invent a price).
+export const BETA_ACTIVE = true;
+export const BETA_PRICE: number | null = null;
+export const BETA_SLOTS = 3;
+
 // Boostov Pro demo page. Leave empty to hide the "Voir la démo" button.
 export const PRO_DEMO_URL = "";

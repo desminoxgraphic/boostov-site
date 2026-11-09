@@ -3,7 +3,8 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { PHONE_E164, PHONE_LOCAL, telHref, waHref, MESSAGES } from "../lib/contact.ts";
-import { PRICING, PRO_DEMO_URL } from "../src/config/pricing.ts";
+import { BETA_ACTIVE, BETA_PRICE, BETA_SLOTS, PRICING, PRO_DEMO_URL } from "../src/config/pricing.ts";
+import { frameAt, SLOTS } from "../lib/story.ts";
 
 const tracked = execFileSync("git", ["ls-files", "-co", "--exclude-standard"], { encoding: "utf8" })
   .split("\n")
@@ -50,6 +51,43 @@ test("prices match the brief", () => {
     connect: { carte: 200, stand: 250 },
     kits: { kit5: { cartes: 5, price: 250 }, kit10: { cartes: 10, price: 350 } },
   });
+});
+
+test("Beta is a separate offer: no invented price, normal Grow v2 price unchanged", () => {
+  assert.equal(typeof BETA_ACTIVE, "boolean");
+  assert.ok(BETA_PRICE === null || (Number.isInteger(BETA_PRICE) && BETA_PRICE > 0), "BETA_PRICE must be null or a real number");
+  assert.equal(BETA_SLOTS, 3);
+  const fr = readFileSync("content/fr.ts", "utf8");
+  assert.match(fr, /Prix spécial pour les \$\{BETA_SLOTS\} testeurs, sur demande WhatsApp/);
+  assert.match(fr, /L’offre normale reste Boostov Grow v2 à \$\{grow\.stand\} DH/);
+  const sections = readFileSync("components/site/sections.tsx", "utf8");
+  assert.match(sections, /BETA_PRICE \? .*: b\.onRequest/, "Beta block must fall back to the on-request text");
+  assert.match(MESSAGES.growBeta, /testeur/);
+});
+
+test("scroll story counter matches every step (0/5, 1/5 → 4/5, 5/5, 0/5)", () => {
+  const seen = [];
+  for (let p = 0; p <= 1; p += 0.01) {
+    const f = frameAt(p);
+    const key = `${f.step}:${f.state}:${f.count}`;
+    if (seen.at(-1) !== key) seen.push(key);
+  }
+  assert.deepEqual(seen, ["0:tap:0", "1:stamps:1", "1:stamps:2", "1:stamps:3", "1:stamps:4", "2:gift:5", "3:loop:0"]);
+  assert.equal(SLOTS, 5);
+});
+
+test("one navigation only (no duplicated menu)", () => {
+  const navs = SITE_FILES.filter((f) => f.endsWith(".tsx")).flatMap((f) => [...readFileSync(f, "utf8").matchAll(/aria-label="Navigation principale"/g)].map(() => f));
+  assert.deepEqual(navs, ["components/site/nav-links.tsx"]);
+  assert.match(readFileSync("content/fr.ts", "utf8"), /\["\/blog", "Guides"\]/);
+});
+
+test("structured data comes after the page content (no meta text first)", () => {
+  for (const file of ["app/page.tsx", "app/grow/page.tsx", "app/pro/page.tsx", "app/connect/page.tsx", "app/revendeurs/page.tsx", "app/faq/page.tsx", "app/blog/page.tsx", "components/site/post-view.tsx"]) {
+    const text = readFileSync(file, "utf8");
+    const json = text.indexOf("<JsonLd"), end = text.lastIndexOf("</>");
+    assert.ok(json > 0 && end - json < 400, `${file}: JsonLd should be the last element`);
+  }
 });
 
 test("Pro demo button only renders when PRO_DEMO_URL is set", () => {

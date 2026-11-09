@@ -1,0 +1,283 @@
+<!doctype html>
+<!--
+  Product render scenes for boostov.ma. Rendered to transparent PNGs by scripts/build-renders.mjs,
+  then to responsive AVIF/WebP by scripts/build-images.py. Every name shown is fictional
+  ("Votre commerce") or the owner's own studio (Desminox). Replace with real photos when available.
+-->
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<style>
+@font-face { font-family: "Bricolage"; font-weight: 800; src: url("../../public/fonts/bricolage-latin.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-weight: 100 900; src: url("../../public/fonts/inter-latin.woff2") format("woff2"); }
+:root { --blue: #0060F8; --cyan: #00B4FA; --navy: #0C2658; --gold: #E8B54A; --ink: #07090F; --cream: #F6F3EE; }
+* { box-sizing: border-box; margin: 0; }
+body { background: transparent; font-family: Inter, sans-serif; display: grid; gap: 40px; padding: 20px; justify-items: start; }
+[data-render] { width: max-content; position: relative; display: grid; place-items: center; overflow: visible; }
+svg { display: block; }
+
+/* ---------- phone ---------- */
+.phone { position: relative; width: 340px; height: 718px; border-radius: 56px; padding: 12px; background: linear-gradient(150deg, #3a4153 0%, #11141c 22%, #0b0d13 70%, #2a3040 100%); box-shadow: 0 0 0 1.5px rgba(255,255,255,.14) inset, 0 50px 80px -30px rgba(0,0,0,.55), 0 30px 40px -30px rgba(0,0,0,.4); }
+.phone::before { content: ""; position: absolute; inset: 3px; border-radius: 53px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.06); pointer-events: none; }
+.island { position: absolute; z-index: 3; top: 24px; left: 50%; width: 104px; height: 30px; margin-left: -52px; border-radius: 20px; background: #000; }
+.screen { position: relative; height: 100%; border-radius: 44px; overflow: hidden; background: var(--cream); color: #1B1712; display: flex; flex-direction: column; gap: 14px; padding: 62px 16px 18px; }
+.status { position: absolute; top: 22px; left: 30px; right: 30px; display: flex; justify-content: space-between; font: 600 14px/1 Inter; color: #1B1712; }
+.glare { position: absolute; inset: 0; border-radius: 44px; background: linear-gradient(115deg, rgba(255,255,255,.18), transparent 38%); pointer-events: none; z-index: 4; }
+
+.lc { border-radius: 24px; padding: 18px; color: #fff; position: relative; overflow: hidden; background: linear-gradient(150deg, #10203f, var(--navy) 55%, #0a3a8a); box-shadow: 0 20px 30px -18px rgba(12,38,88,.8); }
+.lc::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(135deg, rgba(255,255,255,.035) 0 10px, transparent 10px 20px); }
+.lc-top { position: relative; display: flex; align-items: center; gap: 12px; }
+.mono { width: 40px; height: 40px; border-radius: 50%; background: #fff; display: grid; place-items: center; color: var(--navy); font: 800 17px/1 Bricolage; }
+.lc-name { font: 800 17px/1.1 Bricolage; letter-spacing: -.01em; }
+.lc-kind { font-size: 10px; letter-spacing: .16em; text-transform: uppercase; opacity: .7; margin-top: 3px; }
+.stamps { position: relative; display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 18px; }
+.st { aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center; background: rgba(255,255,255,.1); box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.22); color: rgba(255,255,255,.35); }
+.st.on { background: #fff; color: var(--blue); box-shadow: 0 6px 12px -6px rgba(0,0,0,.5); }
+.st.gift { color: rgba(232,181,74,.8); box-shadow: inset 0 0 0 1.5px rgba(232,181,74,.5); }
+.lc-foot { position: relative; display: flex; justify-content: space-between; align-items: end; margin-top: 16px; }
+.lc-foot small { display: block; font-size: 9px; letter-spacing: .16em; text-transform: uppercase; opacity: .65; }
+.lc-foot b { font: 800 16px/1.2 Bricolage; }
+.count { font: 800 34px/1 Bricolage; }
+.count span { font-size: 16px; opacity: .6; }
+.reward { border-radius: 20px; padding: 14px; display: flex; gap: 12px; align-items: center; background: #fff; box-shadow: 0 10px 20px -16px rgba(0,0,0,.4); }
+.rw-ico { width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; background: #FBEFD3; color: #9a6a0c; }
+.reward small { display: block; font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: #6B6355; }
+.reward b { font: 800 15px/1.25 Bricolage; }
+.bar { height: 8px; border-radius: 8px; background: #ECE7DF; margin-top: 8px; overflow: hidden; }
+.bar i { display: block; height: 100%; width: 60%; border-radius: 8px; background: linear-gradient(90deg, var(--cyan), var(--blue)); }
+.rows { display: grid; gap: 9px; margin-top: auto; }
+.row { height: 48px; border-radius: 16px; background: #fff; display: flex; align-items: center; gap: 12px; padding: 0 14px; font-size: 13px; font-weight: 600; color: #3A342C; }
+.row i { width: 28px; height: 28px; border-radius: 9px; background: #EEF2FA; display: grid; place-items: center; color: var(--blue); }
+.row--wa { background: #128C4A; color: #fff; justify-content: center; }
+.row--wa i { background: rgba(255,255,255,.18); color: #fff; }
+
+/* page phones (Pro / Connect) */
+.pp { padding: 0 0 18px; gap: 0; text-align: center; align-items: center; }
+.pp-cover { align-self: stretch; height: 170px; position: relative; overflow: hidden; }
+.pp-avatar { position: relative; width: 96px; height: 96px; margin-top: -48px; border-radius: 50%; border: 5px solid var(--cream); display: grid; place-items: center; font: 800 38px/1 Bricolage; }
+.pp-name { margin-top: 12px; font: 800 26px/1 Bricolage; letter-spacing: -.02em; }
+.pp-job { margin-top: 6px; font-size: 13px; color: #6B6355; }
+.pp-tags { display: flex; gap: 6px; justify-content: center; margin-top: 12px; flex-wrap: wrap; padding: 0 16px; }
+.pp-tags span { font-size: 11px; font-weight: 600; padding: 5px 10px; border-radius: 99px; background: #fff; color: #3A342C; }
+.pp-rows { align-self: stretch; display: grid; gap: 9px; padding: 18px 16px 0; text-align: left; }
+.dark .screen { background: #0D0F14; color: #F2F5FA; }
+.dark .pp-avatar { border-color: #0D0F14; }
+.dark .pp-job { color: #A9B3C4; }
+.dark .pp-tags span { background: #191C24; color: #E6E9EF; }
+.dark .row { background: #171A21; color: #F2F5FA; }
+.dark .row i { background: rgba(232,181,74,.14); color: var(--gold); }
+.dark .row--gold { background: var(--gold); color: #0A0B0F; justify-content: center; }
+.dark .row--gold i { background: rgba(0,0,0,.12); color: #0A0B0F; }
+.dark .status { color: #F2F5FA; }
+
+/* ---------- stand ---------- */
+.stage { width: 640px; height: 640px; display: grid; place-items: center; perspective: 1400px; }
+.stand { position: relative; width: 300px; height: 440px; transform: rotateY(-18deg) rotateX(4deg); transform-style: preserve-3d; }
+.stand-face { position: absolute; inset: 0; border-radius: 26px 26px 10px 10px; overflow: hidden; display: flex; flex-direction: column; align-items: center; padding: 34px 26px 28px; text-align: center; box-shadow: inset 0 1px 0 rgba(255,255,255,.25), inset 0 0 0 1px rgba(255,255,255,.08); }
+.stand-face::after { content: ""; position: absolute; inset: 0; background: linear-gradient(112deg, rgba(255,255,255,.22) 0%, rgba(255,255,255,0) 32%, rgba(255,255,255,0) 70%, rgba(255,255,255,.06) 100%); }
+.stand-side { position: absolute; top: 0; bottom: 0; right: -16px; width: 16px; border-radius: 0 10px 6px 0; transform-origin: left; transform: rotateY(90deg); }
+.stand-base { position: absolute; left: -26px; right: -40px; bottom: -34px; height: 40px; border-radius: 10px; background: linear-gradient(180deg, #2b3242, #0d1119); box-shadow: 0 30px 40px -18px rgba(0,0,0,.6); transform: translateZ(-20px); }
+.shadow { position: absolute; left: 50%; bottom: 72px; width: 460px; height: 70px; margin-left: -230px; border-radius: 50%; background: radial-gradient(closest-side, rgba(0,0,0,.45), transparent); filter: blur(6px); }
+.s-logo { position: relative; width: 66px; height: 66px; border-radius: 50%; background: #fff; display: grid; place-items: center; color: var(--navy); font: 800 26px/1 Bricolage; box-shadow: 0 8px 16px -8px rgba(0,0,0,.5); }
+.s-name { position: relative; margin-top: 12px; font: 800 22px/1.05 Bricolage; letter-spacing: -.02em; }
+.s-msg { position: relative; margin-top: 14px; font: 800 30px/1 Bricolage; letter-spacing: -.03em; }
+.s-sub { position: relative; margin-top: 8px; font-size: 13px; font-weight: 600; opacity: .8; }
+.s-tap { position: relative; margin-top: 16px; display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; }
+.s-qr { position: relative; margin-top: auto; padding: 8px; border-radius: 12px; background: #fff; }
+.s-brand { position: relative; margin-top: 10px; font-size: 10px; letter-spacing: .14em; text-transform: uppercase; opacity: .7; }
+.grow .stand-face { background: linear-gradient(160deg, #13244a 0%, var(--navy) 45%, #0a3a8a 100%); color: #fff; }
+.grow .stand-side { background: #081a3c; }
+.grow .s-msg { color: var(--gold); }
+.grow .s-tap { background: rgba(255,255,255,.12); box-shadow: 0 0 0 8px rgba(255,255,255,.06), 0 0 0 16px rgba(255,255,255,.03); }
+.connect .stand-face { background: linear-gradient(165deg, #ffffff, #EEF3FC); color: var(--navy); }
+.connect .stand-side { background: #cfd8ea; }
+.connect .s-logo { background: var(--navy); color: #fff; }
+.connect .s-msg { color: var(--blue); }
+.connect .s-tap { background: rgba(0,96,248,.1); color: var(--blue); box-shadow: 0 0 0 8px rgba(0,96,248,.05); }
+
+/* ---------- cards ---------- */
+.cards { position: relative; width: 640px; height: 520px; perspective: 1600px; }
+.card { position: absolute; width: 380px; height: 240px; border-radius: 22px; overflow: hidden; padding: 26px 28px; display: flex; flex-direction: column; box-shadow: 0 40px 60px -30px rgba(0,0,0,.6), 0 14px 20px -12px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.18); }
+.card::after { content: ""; position: absolute; inset: 0; background: linear-gradient(118deg, rgba(255,255,255,.2), rgba(255,255,255,0) 35%, rgba(255,255,255,0) 75%, rgba(255,255,255,.05)); }
+.c-row { position: relative; display: flex; justify-content: space-between; align-items: start; }
+.c-name { font: 800 30px/1 Bricolage; letter-spacing: -.02em; }
+.c-job { margin-top: 6px; font-size: 13px; font-weight: 500; opacity: .75; }
+.c-foot { position: relative; margin-top: auto; display: flex; justify-content: space-between; align-items: end; }
+.c-brand { font-size: 10px; letter-spacing: .16em; text-transform: uppercase; opacity: .6; }
+.pro-front { background: linear-gradient(135deg, #1a1c22, #0b0c10 55%, #22252c); color: #F2F5FA; }
+.pro-front .c-name { color: var(--gold); }
+.pro-back { background: linear-gradient(135deg, #15171c, #0a0b0e); color: #F2F5FA; align-items: center; justify-content: center; }
+.connect-front { background: linear-gradient(135deg, var(--cyan) -20%, var(--blue) 35%, var(--navy) 100%); color: #fff; }
+.connect-back { background: linear-gradient(135deg, #ffffff, #E9EFFA); color: var(--navy); align-items: center; justify-content: center; }
+.code { display: flex; gap: 14px; align-items: center; padding: 14px; border-radius: 20px; background: #fff; box-shadow: 0 10px 20px -16px rgba(0,0,0,.4); }
+.code b { display: block; font: 800 15px/1.2 Bricolage; }
+.code small { display: block; margin-top: 4px; font-size: 12px; line-height: 1.35; color: #6B6355; }
+[data-i] svg { width: 55%; height: 55%; }
+.row i[data-i] svg { width: 16px; height: 16px; }
+.qrwrap { position: relative; padding: 8px; background: #fff; border-radius: 10px; }
+</style>
+</head>
+<body>
+
+<!-- 1. Hero phone: Grow v2 loyalty card, 3 of 5 visits -->
+<div data-render="render-phone-loyalty" style="padding:40px 50px 70px">
+  <div class="phone"><div class="island"></div><div class="screen">
+    <div class="status"><span>9:41</span><span>●●● ◔</span></div>
+    <div class="lc">
+      <div class="lc-top"><div class="mono">V</div><div><div class="lc-name">Votre commerce</div><div class="lc-kind">Carte fidélité</div></div></div>
+      <div class="stamps"><div class="st on" data-i="check"></div><div class="st on" data-i="check"></div><div class="st on" data-i="check"></div><div class="st" data-i="check"></div><div class="st gift" data-i="gift"></div></div>
+      <div class="lc-foot"><div><small>Client</small><b>Yasmine</b></div><div class="count">3<span>/5</span></div></div>
+    </div>
+    <div class="reward"><div class="rw-ico" data-i="gift"></div><div style="flex:1"><small>Plus que 2 visites</small><b>Votre récompense</b><div class="bar"><i></i></div></div></div>
+    <div class="code"><div data-qr="92"></div><div><b>Votre code client</b><small>Montrez-le à la caisse pour valider votre visite.</small></div></div>
+    <div class="rows">
+      <div class="row row--wa"><i data-i="wa"></i>WhatsApp du commerce</div>
+      <div class="row"><i data-i="plus"></i>Enregistrer le contact</div>
+      <div class="row"><i data-i="star"></i>Laisser un avis Google</div>
+    </div>
+    <div class="glare"></div>
+  </div></div>
+</div>
+
+<!-- 2. Grow v2 stand -->
+<div data-render="render-stand-grow" class="stage grow">
+  <div class="shadow"></div>
+  <div class="stand">
+    <div class="stand-base"></div>
+    <div class="stand-face">
+      <div class="s-logo">V</div>
+      <div class="s-name">Votre commerce</div>
+      <div class="s-msg">Carte fidélité</div>
+      <div class="s-sub">Touchez · Gagnez · Revenez</div>
+      <div class="s-tap" data-nfc="#fff"></div>
+      <div class="s-qr" data-qr="88"></div>
+      <div class="s-brand">Boostov</div>
+    </div>
+    <div class="stand-side"></div>
+  </div>
+</div>
+
+<!-- 3. Connect stand -->
+<div data-render="render-stand-connect" class="stage connect">
+  <div class="shadow"></div>
+  <div class="stand">
+    <div class="stand-base"></div>
+    <div class="stand-face">
+      <div class="s-logo">V</div>
+      <div class="s-name">Votre commerce</div>
+      <div class="s-msg">Contactez-nous</div>
+      <div class="s-sub">WhatsApp · Instagram · Itinéraire</div>
+      <div class="s-tap" data-nfc="#0060F8"></div>
+      <div class="s-qr" data-qr="88"></div>
+      <div class="s-brand">Boostov</div>
+    </div>
+    <div class="stand-side"></div>
+  </div>
+</div>
+
+<!-- 4. Pro card (Desminox), front and back -->
+<div data-render="render-card-pro" class="cards">
+  <div class="card pro-back" style="left:210px; top:70px; transform: rotate(10deg)"><div class="qrwrap" data-qr="120"></div></div>
+  <div class="card pro-front" style="left:40px; top:200px; transform: rotate(-7deg)">
+    <div class="c-row"><div><div class="c-name">Desminox</div><div class="c-job">Designer graphique &amp; motion</div></div><div data-nfc="#E8B54A" style="width:40px;height:40px"></div></div>
+    <div class="c-foot"><div class="c-brand">Boostov Pro</div><div class="c-brand">Touchez ici</div></div>
+  </div>
+</div>
+
+<!-- 5. Connect card, front and back -->
+<div data-render="render-card-connect" class="cards">
+  <div class="card connect-back" style="left:210px; top:70px; transform: rotate(10deg)"><div class="qrwrap" data-qr="120"></div></div>
+  <div class="card connect-front" style="left:40px; top:200px; transform: rotate(-7deg)">
+    <div class="c-row"><div><div class="c-name">Votre commerce</div><div class="c-job">Contactez-nous en un tap</div></div><div data-nfc="#fff" style="width:40px;height:40px"></div></div>
+    <div class="c-foot"><div class="c-brand">Boostov Connect</div><div class="c-brand">Touchez ici</div></div>
+  </div>
+</div>
+
+<!-- 6. Pro page phone (Desminox) -->
+<div data-render="render-phone-pro" class="dark" style="padding:40px 50px 70px">
+  <div class="phone"><div class="island"></div><div class="screen pp">
+    <div class="status"><span>9:41</span><span>●●● ◔</span></div>
+    <div class="pp-cover" style="background: radial-gradient(80% 120% at 80% 0%, rgba(232,181,74,.45), transparent 60%), linear-gradient(135deg, #24262d, #0D0F14)"></div>
+    <div class="pp-avatar" style="background: var(--gold); color:#0A0B0F">D</div>
+    <div class="pp-name">Desminox</div>
+    <div class="pp-job">Designer graphique &amp; motion · Agadir</div>
+    <div class="pp-tags"><span>Logo &amp; identité</span><span>Motion design</span><span>Réseaux sociaux</span></div>
+    <div class="pp-rows">
+      <div class="row row--gold"><i data-i="wa"></i>WhatsApp</div>
+      <div class="row"><i data-i="plus"></i>Enregistrer le contact</div>
+      <div class="row"><i data-i="star"></i>Demander un devis</div>
+      <div class="row"><i data-i="grid"></i>Galerie de projets</div>
+      <div class="row"><i data-i="insta"></i>Instagram</div>
+    </div>
+    <div class="glare"></div>
+  </div></div>
+</div>
+
+<!-- 7. Connect page phone -->
+<div data-render="render-phone-connect" style="padding:40px 50px 70px">
+  <div class="phone"><div class="island"></div><div class="screen pp">
+    <div class="status" style="color:#fff"><span>9:41</span><span>●●● ◔</span></div>
+    <div class="pp-cover" style="background: linear-gradient(135deg, var(--cyan), var(--blue) 55%, var(--navy))"></div>
+    <div class="pp-avatar" style="background:#fff; color: var(--navy)">V</div>
+    <div class="pp-name">Votre commerce</div>
+    <div class="pp-job">Agadir, Maroc</div>
+    <div class="pp-rows">
+      <div class="row row--wa"><i data-i="wa"></i>WhatsApp</div>
+      <div class="row"><i data-i="phone"></i>Appeler</div>
+      <div class="row"><i data-i="insta"></i>Instagram</div>
+      <div class="row"><i data-i="map"></i>Itinéraire</div>
+      <div class="row"><i data-i="plus"></i>Enregistrer le contact</div>
+    </div>
+    <div class="glare"></div>
+  </div></div>
+</div>
+
+<!-- 8. Connect duo: card + stand -->
+<div data-render="render-connect-duo" style="width:640px;height:520px;position:relative">
+  <div class="stage connect" style="position:absolute; right:-40px; top:-60px; transform: scale(.82)"><div class="shadow"></div>
+    <div class="stand"><div class="stand-base"></div><div class="stand-face">
+      <div class="s-logo">V</div><div class="s-name">Votre commerce</div><div class="s-msg">Contactez-nous</div>
+      <div class="s-sub">WhatsApp · Instagram</div><div class="s-tap" data-nfc="#0060F8"></div><div class="s-qr" data-qr="78"></div><div class="s-brand">Boostov</div>
+    </div><div class="stand-side"></div></div>
+  </div>
+  <div class="card connect-front" style="left:30px; top:270px; transform: rotate(-8deg); width:330px; height:208px">
+    <div class="c-row"><div><div class="c-name" style="font-size:26px">Votre commerce</div><div class="c-job">Contactez-nous en un tap</div></div><div data-nfc="#fff" style="width:34px;height:34px"></div></div>
+    <div class="c-foot"><div class="c-brand">Boostov Connect</div></div>
+  </div>
+</div>
+
+<script>
+// Line icons (stroke = currentColor).
+const ICONS = {
+  check: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+  gift: '<rect x="3.5" y="8" width="17" height="4" rx="1"/><path d="M5 12v8h14v-8M12 8v12M12 8c-2.5 0-5-1-5-3s3-2 5 3c2-5 5-5 5-3s-2.5 3-5 3"/>',
+  wa: '<path d="M4 20l1.3-3.8A8 8 0 1 1 8 19z"/><path d="M9 9.5c.5 2 2.5 4 4.5 4.5l1-1 2 1c-.3 1.2-1.3 2-2.5 1.8-3-.5-5.8-3.3-6.3-6.3C7.5 8.3 8.3 7.3 9.5 7l1 2z"/>',
+  plus: '<circle cx="9" cy="8" r="3.5"/><path d="M3 20c.8-3.5 3.3-5.5 6-5.5s5.2 2 6 5.5M18 8v6M15 11h6"/>',
+  star: '<path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.8L12 16.8 6.8 19.6l1-5.8L3.5 9.7l5.9-.8z"/>',
+  grid: '<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>',
+  insta: '<rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17" cy="7" r=".8" fill="currentColor"/>',
+  phone: '<path d="M6 3.5h3l1.5 4-2 1.5a11 11 0 0 0 6.5 6.5l1.5-2 4 1.5v3a2 2 0 0 1-2 2A16 16 0 0 1 4 5.5a2 2 0 0 1 2-2z"/>',
+  map: '<path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',
+};
+for (const el of document.querySelectorAll("[data-i]")) el.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${ICONS[el.dataset.i]}</svg>`;
+// NFC "waves" icon.
+for (const el of document.querySelectorAll("[data-nfc]")) {
+  const c = el.dataset.nfc;
+  el.innerHTML = `<svg viewBox="0 0 40 40" width="100%" height="100%" style="max-width:40px;max-height:40px" fill="none" stroke="${c}" stroke-width="3" stroke-linecap="round"><circle cx="11" cy="20" r="3" fill="${c}" stroke="none"/><path d="M18 12a12 12 0 0 1 0 16"/><path d="M24 7a19 19 0 0 1 0 26"/><path d="M30 3a26 26 0 0 1 0 34"/></svg>`;
+}
+// Decorative QR-style pattern (not a scannable code): finder squares + deterministic noise.
+function qr(size) {
+  const n = 25, cell = size / n; let seed = 7; const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+  let r = "";
+  const finder = (x, y) => r += `<rect x="${x*cell}" y="${y*cell}" width="${7*cell}" height="${7*cell}" fill="#0B0F1A"/><rect x="${(x+1)*cell}" y="${(y+1)*cell}" width="${5*cell}" height="${5*cell}" fill="#fff"/><rect x="${(x+2)*cell}" y="${(y+2)*cell}" width="${3*cell}" height="${3*cell}" fill="#0B0F1A"/>`;
+  for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+    const inF = (x < 8 && y < 8) || (x > n - 9 && y < 8) || (x < 8 && y > n - 9);
+    if (!inF && rnd() > .52) r += `<rect x="${x*cell}" y="${y*cell}" width="${cell}" height="${cell}" fill="#0B0F1A"/>`;
+  }
+  finder(0, 0); finder(n - 7, 0); finder(0, n - 7);
+  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" shape-rendering="crispEdges">${r}</svg>`;
+}
+for (const el of document.querySelectorAll("[data-qr]")) el.innerHTML = qr(+el.dataset.qr);
+</script>
+</body>
+</html>

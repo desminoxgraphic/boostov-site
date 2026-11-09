@@ -6,7 +6,7 @@ import { POSTS } from "@/content/blog.fr";
 import { pageMeta } from "@/lib/meta";
 import { breadcrumb, faq } from "@/lib/schema";
 import { JsonLd } from "@/components/site/json-ld";
-import { Breadcrumbs, PageHero } from "@/components/site/ui";
+import { PageHero } from "@/components/site/ui";
 import { FinalCta } from "@/components/site/sections";
 import { fr } from "@/content/fr";
 
@@ -14,10 +14,8 @@ export const metadata: Metadata = pageMeta({ title: t.title, description: t.desc
 
 export default function FaqPage() {
   return <>
-    <JsonLd data={[breadcrumb([["FAQ", "/faq"]]), faq(t.groups.flatMap((g) => g.items))]} />
-    <Breadcrumbs items={[["FAQ", "/faq"]]} />
-    <PageHero eyebrow={t.eyebrow} title={t.h1} lead={t.lead} msg="info" />
-    <section className="section section--flush-top"><div className="container faq-page">
+    <PageHero crumbs={[["FAQ", "/faq"]]} eyebrow={t.eyebrow} title={t.h1} lead={t.lead} msg="info" />
+    <section className="sec sec--light"><div className="container faq-page">
       <nav className="faq-toc" aria-label="Thèmes">{t.groups.map((g) => <a key={g.id} href={`#${g.id}`}>{g.title}</a>)}</nav>
       <div className="faq-groups">
         {t.groups.map((g) => <section key={g.id} id={g.id} className="faq faq-group" aria-labelledby={`${g.id}-title`}>
@@ -31,5 +29,7 @@ export default function FaqPage() {
       </div>
     </div></section>
     <FinalCta title={fr.home.final.title} text={fr.home.final.text} />
+    {/* Structured data last, so text tools read the page content first. */}
+    <JsonLd data={[breadcrumb([["FAQ", "/faq"]]), faq(t.groups.flatMap((g) => g.items))]} />
   </>;
 }

@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export default function MentionsLegales() {
   return <>
     <PageHero eyebrow="Informations · à valider" title="Mentions légales" lead="Les informations sur l’éditeur du site boostov.ma." />
-    <section className="section section--flush-top"><div className="container prose-wrap">
+    <section className="sec sec--light"><div className="container prose-wrap">
       <div className="prose">
         <h2>Éditeur</h2>
         <p>Boostov, Agadir, Maroc.</p>
